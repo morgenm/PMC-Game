@@ -10,5 +10,5 @@ LIBS+= -lIrrlicht
 
 pmc: src/main.cpp
 	cd src; \
-	g++ -o pmc $(INCLUDES) main.cpp $(LIBS);
+	g++ -o pmc $(INCLUDES) *.cpp $(LIBS);
 	mv src/pmc .

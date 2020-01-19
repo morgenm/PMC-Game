@@ -1,6 +1,7 @@
 #include <iostream>
 #include <irrlicht.h>
 #include <cmath>
+#include "player_gun.h"
 
 class PMCEventReceiver : public irr::IEventReceiver //Custom irrlicht event receiver
 {
@@ -100,9 +101,10 @@ int main()
     int lastFPS = -1;
     irr::u32 then = irr_device->getTimer()->getTime();
 
-    bool gun_aimed = false;
+    /*bool gun_aimed = false;
     irr::f32 time_since_aim_switch = 0;
-    irr::f32 aim_time_wait = 0.2;
+    irr::f32 aim_time_wait = 0.2;*/
+    PlayerGun player_gun;
     while(irr_device->run())
     {
         //Frame delta time
@@ -110,7 +112,7 @@ int main()
         const irr::f32 frame_delta_time = (irr::f32) (now-then)/1000.f;
         then = now;
 
-        time_since_aim_switch += frame_delta_time;
+        //time_since_aim_switch += frame_delta_time;
 
         if(p_event_receiver.IsKeyDown(irr::KEY_ESCAPE)) //Escape key pressed
         {
@@ -153,20 +155,25 @@ int main()
 
         if(p_event_receiver.IsMouseDown(1))
         {
-            if(!gun_aimed && time_since_aim_switch > aim_time_wait) //Aim the gun
-            {
-                gun_aimed = true;
-                time_since_aim_switch = 0;
-                gun_node->setPosition(irr::core::vector3df(0,-1,8));
-                gun_node->setRotation(irr::core::vector3df(-60,-90,60));
-            }
-            else if(gun_aimed && time_since_aim_switch > aim_time_wait)
-            {
-                gun_aimed = false;
-                time_since_aim_switch = 0;
-                gun_node->setPosition(irr::core::vector3df(3,-3,12));
-                gun_node->setRotation(irr::core::vector3df(0,-120,0));
-            }
+            player_gun.try_aim_change();
+        }
+
+        player_gun.update(frame_delta_time);
+
+        const irr::core::vector3df player_gun_aimed_pos(0,-1,8);
+        const irr::core::vector3df player_gun_aimed_rot(-60,-90,60);
+        const irr::core::vector3df player_gun_unaimed_pos(3,-3,12);
+        const irr::core::vector3df player_gun_unaimed_rot(0,-120,0);
+
+        if(player_gun.get_aimed() && gun_node->getPosition() == player_gun_unaimed_pos)
+        {
+            gun_node->setPosition(player_gun_aimed_pos);
+            gun_node->setRotation(player_gun_aimed_rot);
+        }
+        else if(!player_gun.get_aimed() && gun_node->getPosition() == player_gun_aimed_pos)
+        {
+            gun_node->setPosition(player_gun_unaimed_pos);
+            gun_node->setRotation(player_gun_unaimed_rot);
         }
 
         driver->beginScene(true, true, irr::video::SColor(255,0,100,255));
