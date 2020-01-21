@@ -2,187 +2,112 @@
 #include <irrlicht.h>
 #include <cmath>
 #include "player_gun.h"
+#include "irrlicht_handler.h"
+#include "animated_mesh.h"
+#include "vec3.h"
 
-class PMCEventReceiver : public irr::IEventReceiver //Custom irrlicht event receiver
-{
-    bool KeyIsDown[irr::KEY_KEY_CODES_COUNT]; //Stores the current state (up/down) of each key
-    bool MouseIsDown[3];
-
-public:
-    virtual bool OnEvent(const irr::SEvent& event)
-    {
-        if(event.EventType == irr::EET_KEY_INPUT_EVENT)
-            KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown; //Store if the key is down or not
-
-        else if(event.EventType == irr::EET_MOUSE_INPUT_EVENT)
-        {
-            MouseIsDown[0] = event.MouseInput.isLeftPressed();
-            MouseIsDown[1] = event.MouseInput.isRightPressed();
-            MouseIsDown[2] = event.MouseInput.isMiddlePressed();
-        }
-        return false; //I don't know why this is here???
-    }
-
-    virtual bool IsKeyDown(irr::EKEY_CODE keyCode) const //Check if key is pressed
-    {
-        return KeyIsDown[keyCode];
-    }
-
-    bool IsMouseDown(int i) const
-    {
-        return MouseIsDown[i];
-    }
-
-    PMCEventReceiver()
-    {
-        for(irr::u32 i=0; i<irr::KEY_KEY_CODES_COUNT; i++)
-            KeyIsDown[i] = false;
-    }
-};
+#define PI std::acos(-1)
 
 int main()
 {
-    bool vsync = false;
+    bool b_vsync = false;
 
-    PMCEventReceiver p_event_receiver;
-
-    irr::IrrlichtDevice *irr_device = irr::createDevice(irr::video::EDT_OPENGL,
-        irr::core::dimension2d<irr::u32>(640,480), 16, false, false, vsync, &p_event_receiver);
-    if(!irr_device)
-        return 1;
-
-    irr_device->setWindowCaption(L"PMC Game");
-
-    irr::video::IVideoDriver *driver = irr_device->getVideoDriver();
-    irr::scene::ISceneManager *scene_mgr = irr_device->getSceneManager();
-    irr::gui::IGUIEnvironment *gui_env = irr_device->getGUIEnvironment();
-
-    gui_env->addStaticText(L"PMC Game 1.0", irr::core::rect<irr::s32>(10,10,260,22), false);
-
-
-    //Mesh for temp built-in character
-    irr::scene::IAnimatedMesh *mesh = scene_mgr->getMesh("../irrlicht_engine/media/sydney.md2");
-    if(!mesh)
-    {
-        irr_device->drop();
-        return 0;
-    }
-
-    //Node for the temp character
-    irr::scene::IAnimatedMeshSceneNode *node = scene_mgr->addAnimatedMeshSceneNode(mesh);
-    if(node)
-    {
-        node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-        node->setMD2Animation(irr::scene::EMAT_STAND);
-        node->setMaterialTexture(0, driver->getTexture("../irrlicht_engine/media/sydney.bmp"));
-    }
-
-    //FPS Camera
-    irr::scene::ICameraSceneNode *fps_camera = scene_mgr->addCameraSceneNodeFPS();
-    fps_camera->setPosition(irr::core::vector3df(0,30,-40));
-    irr_device->getCursorControl()->setVisible(false);
-
-    irr::scene::IAnimatedMesh *gun_mesh = scene_mgr->getMesh("resources/temp_gun/temp_gun.obj");
-    if(!gun_mesh)
-    {
-        irr_device->drop();
-        return 0;
-    }
-
-    irr::scene::IAnimatedMeshSceneNode *gun_node = scene_mgr->addAnimatedMeshSceneNode(gun_mesh, fps_camera);
-    if(gun_node)
-    {
-        gun_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-        gun_node->setPosition(irr::core::vector3df(3,-3,12));
-        gun_node->setRotation(irr::core::vector3df(0,-120,0));
-    }
+    IrrlichtHandler irrlicht_handler(b_vsync);
+    irrlicht_handler.create_device();
 
     //Used to get delta time between frames
-    int lastFPS = -1;
-    irr::u32 then = irr_device->getTimer()->getTime();
 
-    /*bool gun_aimed = false;
-    irr::f32 time_since_aim_switch = 0;
-    irr::f32 aim_time_wait = 0.2;*/
+    //irr::u32 then = irr_device->getTimer()->getTime();
+
+    AnimatedMesh *sydney = irrlicht_handler.add_animated_mesh("../irrlicht_engine/media/sydney.md2");
+    irrlicht_handler.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
+
+    irrlicht_handler.add_fps_camera(0,30,-40);
+
+    AnimatedMesh *gun_mesh = irrlicht_handler.add_animated_mesh("resources/temp_gun/temp_gun.obj");
+    irrlicht_handler.set_animated_mesh_parent_to_fps_camera(gun_mesh);
+
+    vec3 gun_mesh_default_pos(3,-3,12);
+    vec3 gun_mesh_default_rot(0,-120,0);
+    vec3 gun_mesh_aimed_pos(0,-1,8);
+    vec3 gun_mesh_aimed_rot(-60,-90,60);
+
+    irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
+    irrlicht_handler.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
+
     PlayerGun player_gun;
-    while(irr_device->run())
+
+    int lastFPS = -1;
+    unsigned int then = irrlicht_handler.get_time();
+    const int move_speed = 3;
+    while(irrlicht_handler.run())
     {
-        //Frame delta time
-        const irr::u32 now = irr_device->getTimer()->getTime();
-        const irr::f32 frame_delta_time = (irr::f32) (now-then)/1000.f;
+        unsigned int now = irrlicht_handler.get_time();
+        const float frame_delta_time = (now-then)/1000.f;
         then = now;
 
-        //time_since_aim_switch += frame_delta_time;
-
-        if(p_event_receiver.IsKeyDown(irr::KEY_ESCAPE)) //Escape key pressed
+        //User Input
+        if(irrlicht_handler.is_key_down(irr::KEY_ESCAPE))
         {
-            irr_device->closeDevice(); //Close the window
+            irrlicht_handler.close_device();
             break;
         }
-        //Camera movement
-        const irr::core::vector3df fps_camera_position = fps_camera->getPosition();
-        const irr::core::vector3df rot = fps_camera->getRotation();
-        const double pi = std::acos(-1); //arccos of -1 is pi
-        const int move_speed = 3;
-        if(p_event_receiver.IsKeyDown(irr::KEY_KEY_W))
+        if(irrlicht_handler.is_key_down(irr::KEY_KEY_W))
         {
-            float x = move_speed  * std::sin(rot.Y*pi/180.f);
-            float z = move_speed  * std::cos(rot.Y*pi/180.f);
-            const irr::core::vector3df new_pos(fps_camera_position.X+x, fps_camera_position.Y, fps_camera_position.Z+z);
-            fps_camera->setPosition(new_pos);
+            const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
+            float dx = move_speed * std::sin(rotY*PI/180.f);
+            float dz = move_speed * std::cos(rotY*PI/180.f);
+            irrlicht_handler.move_fps_camera(dx, 0, dz);
         }
-        if(p_event_receiver.IsKeyDown(irr::KEY_KEY_S))
+        if(irrlicht_handler.is_key_down(irr::KEY_KEY_S))
         {
-            float x = move_speed  * std::sin(rot.Y*pi/180.f);
-            float z = move_speed  * std::cos(rot.Y*pi/180.f);
-            const irr::core::vector3df new_pos(fps_camera_position.X-x, fps_camera_position.Y, fps_camera_position.Z-z);
-            fps_camera->setPosition(new_pos);
+            const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
+            float dx = move_speed * std::sin(rotY*PI/180.f);
+            float dz = move_speed * std::cos(rotY*PI/180.f);
+            irrlicht_handler.move_fps_camera(-dx, 0, -dz);
         }
-        if(p_event_receiver.IsKeyDown(irr::KEY_KEY_D))
+        if(irrlicht_handler.is_key_down(irr::KEY_KEY_D))
         {
-            float x = move_speed  * std::sin((rot.Y+90)*pi/180.f);
-            float z = move_speed  * std::cos((rot.Y+90)*pi/180.f);
-            const irr::core::vector3df new_pos(fps_camera_position.X+x, fps_camera_position.Y, fps_camera_position.Z+z);
-            fps_camera->setPosition(new_pos);
+            const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
+            float dx = move_speed * std::sin((rotY+90)*PI/180.f);
+            float dz = move_speed * std::cos((rotY+90)*PI/180.f);
+            irrlicht_handler.move_fps_camera(dx, 0, dz);
         }
-        if(p_event_receiver.IsKeyDown(irr::KEY_KEY_A))
+        if(irrlicht_handler.is_key_down(irr::KEY_KEY_A))
         {
-            float x = move_speed  * std::sin((rot.Y+90)*pi/180.f);
-            float z = move_speed  * std::cos((rot.Y+90)*pi/180.f);
-            const irr::core::vector3df new_pos(fps_camera_position.X-x, fps_camera_position.Y, fps_camera_position.Z-z);
-            fps_camera->setPosition(new_pos);
+            const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
+            float dx = move_speed * std::sin((rotY+90)*PI/180.f);
+            float dz = move_speed * std::cos((rotY+90)*PI/180.f);
+            irrlicht_handler.move_fps_camera(-dx, 0, -dz);
         }
 
-        if(p_event_receiver.IsMouseDown(1))
+        if(irrlicht_handler.is_mouse_down(1))
         {
             player_gun.try_aim_change();
         }
 
         player_gun.update(frame_delta_time);
 
-        const irr::core::vector3df player_gun_aimed_pos(0,-1,8);
-        const irr::core::vector3df player_gun_aimed_rot(-60,-90,60);
-        const irr::core::vector3df player_gun_unaimed_pos(3,-3,12);
-        const irr::core::vector3df player_gun_unaimed_rot(0,-120,0);
-
-        if(player_gun.get_aimed() && gun_node->getPosition() == player_gun_unaimed_pos)
+        vec3 gun_mesh_position = irrlicht_handler.get_animated_mesh_position(gun_mesh);
+        if(player_gun.get_aimed() && gun_mesh_position != gun_mesh_aimed_pos)
         {
-            gun_node->setPosition(player_gun_aimed_pos);
-            gun_node->setRotation(player_gun_aimed_rot);
+            irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_aimed_pos);
+            irrlicht_handler.set_animated_mesh_rotation(gun_mesh, gun_mesh_aimed_rot);
         }
-        else if(!player_gun.get_aimed() && gun_node->getPosition() == player_gun_aimed_pos)
+        else if(!player_gun.get_aimed() && gun_mesh_position == gun_mesh_aimed_pos)
         {
-            gun_node->setPosition(player_gun_unaimed_pos);
-            gun_node->setRotation(player_gun_unaimed_rot);
+            irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
+            irrlicht_handler.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
         }
 
-        driver->beginScene(true, true, irr::video::SColor(255,0,100,255));
-        scene_mgr->drawAll();
-        gui_env->drawAll();
-        driver->endScene();
+        //Drawing
+        irrlicht_handler.begin_drawing();
+        irrlicht_handler.draw_scene();
+        irrlicht_handler.draw_gui();
+        irrlicht_handler.end_drawing();
     }
 
-    irr_device->drop();
+    irrlicht_handler.drop_device();
 
     return 0;
 }

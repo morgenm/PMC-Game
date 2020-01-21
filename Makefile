@@ -1,5 +1,6 @@
 INCLUDES=-I../../irrlicht_engine/include
 LIBS=-L../irrlicht_engine/lib/Linux
+CFLAGS=-Wall
 CXX=g++
 
 ifeq ($(OS),Windows_NT)
@@ -8,7 +9,10 @@ endif
 
 LIBS+= -lIrrlicht
 
-pmc: src/main.cpp
+pmc: src/*.cpp
 	cd src; \
-	g++ -o pmc $(INCLUDES) *.cpp $(LIBS);
+	g++ $(CFLAGS) -o pmc $(INCLUDES) *.cpp $(LIBS);
 	mv src/pmc .
+
+clean:
+	rm pmc
