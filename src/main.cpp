@@ -1,8 +1,7 @@
 #include <iostream>
-#include <irrlicht.h>
 #include <cmath>
 #include "player_gun.h"
-#include "irrlicht_handler.h"
+#include "irrlicht/irrlicht_handler.h"
 #include "animated_mesh.h"
 #include "vec3.h"
 
@@ -14,10 +13,6 @@ int main()
 
     IrrlichtHandler irrlicht_handler(b_vsync);
     irrlicht_handler.create_device();
-
-    //Used to get delta time between frames
-
-    //irr::u32 then = irr_device->getTimer()->getTime();
 
     AnimatedMesh *sydney = irrlicht_handler.add_animated_mesh("../irrlicht_engine/media/sydney.md2");
     irrlicht_handler.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
@@ -37,7 +32,6 @@ int main()
 
     PlayerGun player_gun;
 
-    int lastFPS = -1;
     unsigned int then = irrlicht_handler.get_time();
     const int move_speed = 3;
     while(irrlicht_handler.run())

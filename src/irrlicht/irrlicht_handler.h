@@ -13,8 +13,8 @@ similar functionality.
 #include <vector>
 #include <string>
 #include "pmc_event_receiver.h"
-#include "animated_mesh.h"
-#include "vec3.h"
+#include "../animated_mesh.h"
+#include "../vec3.h"
 
 class IrrlichtHandler
 {

@@ -9,9 +9,9 @@ endif
 
 LIBS+= -lIrrlicht
 
-pmc: src/*.cpp
+pmc: src/*.cpp src/*/*.cpp
 	cd src; \
-	g++ $(CFLAGS) -o pmc $(INCLUDES) *.cpp $(LIBS);
+	g++ $(CFLAGS) -o pmc $(INCLUDES) *.cpp */*.cpp $(LIBS);
 	mv src/pmc .
 
 clean:
