@@ -157,3 +157,28 @@ unsigned int IrrlichtHandler::get_time() const
 {
     return irr_device->getTimer()->getTime();
 }
+
+void IrrlichtHandler::load_file_archive(std::string archive_loc)
+{
+    irr_device->getFileSystem()->addFileArchive(archive_loc.c_str());
+}
+
+MapMesh* IrrlichtHandler::add_octree_mesh(std::string mesh_name)
+{
+    MapMesh new_mesh;
+    new_mesh.mesh = scene_mgr->getMesh(mesh_name.c_str());
+
+    new_mesh.node = scene_mgr->addOctreeSceneNode(new_mesh.mesh->getMesh(0),
+        0, -1, 1024);
+
+    if(!new_mesh.node)
+        return NULL;
+
+    loaded_map_mesh = new_mesh;
+    return &loaded_map_mesh;
+}
+
+void IrrlichtHandler::set_map_mesh_position(MapMesh* mesh, vec3 pos)
+{
+    mesh->node->setPosition(pos);
+}

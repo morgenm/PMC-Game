@@ -3,6 +3,7 @@
 #include "player_gun.h"
 #include "irrlicht/irrlicht_handler.h"
 #include "animated_mesh.h"
+#include "map_mesh.h"
 #include "vec3.h"
 
 #define PI std::acos(-1)
@@ -29,6 +30,11 @@ int main()
 
     irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
     irrlicht_handler.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
+
+    //Quake3 Level
+    irrlicht_handler.load_file_archive("../irrlicht_engine/media/map-20kdm2.pk3");
+    MapMesh* map = irrlicht_handler.add_octree_mesh("20kdm2.bsp");
+    irrlicht_handler.set_map_mesh_position(map, vec3(-1300,-144,-1249));
 
     PlayerGun player_gun;
 

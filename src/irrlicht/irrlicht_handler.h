@@ -15,6 +15,7 @@ similar functionality.
 #include "pmc_event_receiver.h"
 #include "../animated_mesh.h"
 #include "../vec3.h"
+#include "../map_mesh.h"
 
 class IrrlichtHandler
 {
@@ -29,6 +30,8 @@ class IrrlichtHandler
     irr::scene::ICameraSceneNode *fps_camera;
 
     std::vector<AnimatedMesh> animated_meshes; //Move this to graphics engine
+
+    MapMesh loaded_map_mesh;
 public:
     IrrlichtHandler(bool vsync);
 
@@ -63,6 +66,12 @@ public:
     bool is_mouse_down(int mouse_button) const;
 
     unsigned int get_time() const;
-};
 
+    void load_file_archive(std::string archive_loc);
+
+    /* Load an octree mesh. This is an optimized mesh handled by irrlicht which
+    only loads visible geometry. */
+    MapMesh* add_octree_mesh(std::string mesh_name);
+    void set_map_mesh_position(MapMesh* mesh, vec3 pos);
+};
 #endif
