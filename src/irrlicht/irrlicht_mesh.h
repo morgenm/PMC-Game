@@ -3,7 +3,7 @@
 
 #include <irrlicht.h>
 
-struct AnimatedMesh
+struct IrrlichtMesh
 {
     irr::scene::IAnimatedMesh *mesh;
     irr::scene::IAnimatedMeshSceneNode *node;

@@ -13,9 +13,9 @@ similar functionality.
 #include <vector>
 #include <string>
 #include "pmc_event_receiver.h"
-#include "../animated_mesh.h"
+#include "irrlicht_mesh.h"
 #include "../vec3.h"
-#include "../map_mesh.h"
+#include "map_mesh.h"
 
 class IrrlichtHandler
 {
@@ -29,9 +29,9 @@ class IrrlichtHandler
 
     irr::scene::ICameraSceneNode *fps_camera;
 
-    std::vector<AnimatedMesh> animated_meshes; //Move this to graphics engine
+    //std::vector<IrrlichtMesh> animated_meshes; //Move this to graphics engine
 
-    MapMesh loaded_map_mesh;
+    //MapMesh loaded_map_mesh;
 public:
     IrrlichtHandler(bool vsync);
 
@@ -45,18 +45,19 @@ public:
     void draw_scene();
     void draw_gui();
 
-    AnimatedMesh* add_animated_mesh(std::string mesh_loc);
-    void set_animated_mesh_texture(AnimatedMesh* mesh, std::string texture_loc);
-    void set_animated_mesh_parent_to_fps_camera(AnimatedMesh *mesh);
+    IrrlichtMesh add_animated_mesh(std::string mesh_loc);
+    void set_animated_mesh_texture(IrrlichtMesh *mesh, std::string texture_loc);
+    void set_animated_mesh_parent_to_fps_camera(IrrlichtMesh *mesh);
 
-    void set_animated_mesh_position(AnimatedMesh *mesh, float x, float y, float z);
-    void set_animated_mesh_position(AnimatedMesh *mesh, vec3 pos);
-    void set_animated_mesh_rotation(AnimatedMesh *mesh, vec3 rot);
+    void set_animated_mesh_position(IrrlichtMesh *mesh, float x, float y, float z);
+    void set_animated_mesh_position(IrrlichtMesh *mesh, vec3 pos);
+    void set_animated_mesh_rotation(IrrlichtMesh *mesh, vec3 rot);
 
-    vec3 get_animated_mesh_position(AnimatedMesh *mesh) const;
-    vec3 get_animed_mesh_rotation(AnimatedMesh *mesh) const;
+    vec3 get_animated_mesh_position(IrrlichtMesh *mesh) const;
+    vec3 get_animed_mesh_rotation(IrrlichtMesh *mesh) const;
 
-    void add_fps_camera(int x, int y, int z);
+    //void add_fps_camera(int x, int y, int z);
+    void add_fps_camera(vec3 pos);
     void move_fps_camera(float dx, float dy, float dz);
     float get_fps_camera_rotation_x() const;
     float get_fps_camera_rotation_y() const;
@@ -71,7 +72,7 @@ public:
 
     /* Load an octree mesh. This is an optimized mesh handled by irrlicht which
     only loads visible geometry. */
-    MapMesh* add_octree_mesh(std::string mesh_name);
+    MapMesh add_octree_mesh(std::string mesh_name);
     void set_map_mesh_position(MapMesh* mesh, vec3 pos);
 };
 #endif

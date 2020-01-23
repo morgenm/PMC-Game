@@ -1,6 +1,6 @@
 INCLUDES=-I../../irrlicht_engine/include
 LIBS=-L../irrlicht_engine/lib/Linux
-CFLAGS=-Wall
+CFLAGS=-Wall -g
 CXX=g++
 
 ifeq ($(OS),Windows_NT)

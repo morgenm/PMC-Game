@@ -61,63 +61,60 @@ void IrrlichtHandler::draw_gui()
     gui_env->drawAll();
 }
 
-AnimatedMesh* IrrlichtHandler::add_animated_mesh(std::string mesh_loc)
+IrrlichtMesh IrrlichtHandler::add_animated_mesh(std::string mesh_loc)
 {
-    AnimatedMesh new_mesh;
+    IrrlichtMesh new_mesh;
     new_mesh.mesh = scene_mgr->getMesh(mesh_loc.c_str());
-    if(!new_mesh.mesh)
-        return NULL;
 
     new_mesh.node = scene_mgr->addAnimatedMeshSceneNode(new_mesh.mesh);
-    if(!new_mesh.node)
-        return NULL;
 
     new_mesh.node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-    animated_meshes.push_back(new_mesh);
-    return &animated_meshes.back();
+    return new_mesh;
+    //animated_meshes.push_back(new_mesh);
+    //return &animated_meshes.back();
     //node->setMD2Animation(irr::scene::EMAT_STAND);
 }
 
-void IrrlichtHandler::set_animated_mesh_texture(AnimatedMesh* mesh, std::string texture_loc)
+void IrrlichtHandler::set_animated_mesh_texture(IrrlichtMesh* mesh, std::string texture_loc)
 {
     mesh->node->setMaterialTexture(0, driver->getTexture(texture_loc.c_str()));
     return;
 }
 
-void IrrlichtHandler::set_animated_mesh_parent_to_fps_camera(AnimatedMesh *mesh)
+void IrrlichtHandler::set_animated_mesh_parent_to_fps_camera(IrrlichtMesh *mesh)
 {
     mesh->node->setParent(fps_camera);
 }
 
-void IrrlichtHandler::set_animated_mesh_position(AnimatedMesh *mesh, float x, float y, float z)
+void IrrlichtHandler::set_animated_mesh_position(IrrlichtMesh *mesh, float x, float y, float z)
 {
     mesh->node->setPosition(irr::core::vector3df(x,y,z));
 }
 
-void IrrlichtHandler::set_animated_mesh_position(AnimatedMesh *mesh, vec3 pos)
+void IrrlichtHandler::set_animated_mesh_position(IrrlichtMesh *mesh, vec3 pos)
 {
     mesh->node->setPosition(pos);
 }
 
-void IrrlichtHandler::set_animated_mesh_rotation(AnimatedMesh *mesh, vec3 rot)
+void IrrlichtHandler::set_animated_mesh_rotation(IrrlichtMesh *mesh, vec3 rot)
 {
     mesh->node->setRotation(rot);
 }
 
-vec3 IrrlichtHandler::get_animated_mesh_position(AnimatedMesh *mesh) const
+vec3 IrrlichtHandler::get_animated_mesh_position(IrrlichtMesh *mesh) const
 {
     return mesh->node->getPosition();
 }
 
-vec3 IrrlichtHandler::get_animed_mesh_rotation(AnimatedMesh *mesh) const
+vec3 IrrlichtHandler::get_animed_mesh_rotation(IrrlichtMesh *mesh) const
 {
     return mesh->node->getRotation();
 }
 
-void IrrlichtHandler::add_fps_camera(int x, int y, int z)
+void IrrlichtHandler::add_fps_camera(vec3 pos)
 {
     fps_camera = scene_mgr->addCameraSceneNodeFPS();
-    fps_camera->setPosition(irr::core::vector3df(x,y,z));
+    fps_camera->setPosition(pos);
     irr_device->getCursorControl()->setVisible(false);
 }
 
@@ -163,7 +160,7 @@ void IrrlichtHandler::load_file_archive(std::string archive_loc)
     irr_device->getFileSystem()->addFileArchive(archive_loc.c_str());
 }
 
-MapMesh* IrrlichtHandler::add_octree_mesh(std::string mesh_name)
+MapMesh IrrlichtHandler::add_octree_mesh(std::string mesh_name)
 {
     MapMesh new_mesh;
     new_mesh.mesh = scene_mgr->getMesh(mesh_name.c_str());
@@ -171,11 +168,7 @@ MapMesh* IrrlichtHandler::add_octree_mesh(std::string mesh_name)
     new_mesh.node = scene_mgr->addOctreeSceneNode(new_mesh.mesh->getMesh(0),
         0, -1, 1024);
 
-    if(!new_mesh.node)
-        return NULL;
-
-    loaded_map_mesh = new_mesh;
-    return &loaded_map_mesh;
+    return new_mesh;
 }
 
 void IrrlichtHandler::set_map_mesh_position(MapMesh* mesh, vec3 pos)

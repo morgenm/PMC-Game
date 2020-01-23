@@ -2,8 +2,7 @@
 #include <cmath>
 #include "player_gun.h"
 #include "irrlicht/irrlicht_handler.h"
-#include "animated_mesh.h"
-#include "map_mesh.h"
+#include "graphics_engine.h"
 #include "vec3.h"
 
 #define PI std::acos(-1)
@@ -15,26 +14,27 @@ int main()
     IrrlichtHandler irrlicht_handler(b_vsync);
     irrlicht_handler.create_device();
 
-    AnimatedMesh *sydney = irrlicht_handler.add_animated_mesh("../irrlicht_engine/media/sydney.md2");
-    irrlicht_handler.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
+    GraphicsEngine graphics_engine(&irrlicht_handler);
 
-    irrlicht_handler.add_fps_camera(0,30,-40);
+    unsigned int sydney = graphics_engine.load_animated_mesh("../irrlicht_engine/media/sydney.md2");
+    graphics_engine.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
 
-    AnimatedMesh *gun_mesh = irrlicht_handler.add_animated_mesh("resources/temp_gun/temp_gun.obj");
-    irrlicht_handler.set_animated_mesh_parent_to_fps_camera(gun_mesh);
+    graphics_engine.add_fps_camera(vec3(0,30,-40));
+
+    unsigned int gun_mesh = graphics_engine.load_animated_mesh("resources/temp_gun/temp_gun.obj");
+    graphics_engine.set_animated_mesh_parent_to_fps_camera(gun_mesh);
 
     vec3 gun_mesh_default_pos(3,-3,12);
     vec3 gun_mesh_default_rot(0,-120,0);
     vec3 gun_mesh_aimed_pos(0,-1,8);
     vec3 gun_mesh_aimed_rot(-60,-90,60);
 
-    irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
-    irrlicht_handler.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
+    graphics_engine.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
+    graphics_engine.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
 
     //Quake3 Level
-    irrlicht_handler.load_file_archive("../irrlicht_engine/media/map-20kdm2.pk3");
-    MapMesh* map = irrlicht_handler.add_octree_mesh("20kdm2.bsp");
-    irrlicht_handler.set_map_mesh_position(map, vec3(-1300,-144,-1249));
+    graphics_engine.load_map_mesh_from_file("../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
+    graphics_engine.set_map_mesh_position(vec3(-1300,-144,-1249));
 
     PlayerGun player_gun;
 
@@ -88,7 +88,7 @@ int main()
 
         player_gun.update(frame_delta_time);
 
-        vec3 gun_mesh_position = irrlicht_handler.get_animated_mesh_position(gun_mesh);
+        /*vec3 gun_mesh_position = irrlicht_handler.get_animated_mesh_position(gun_mesh);
         if(player_gun.get_aimed() && gun_mesh_position != gun_mesh_aimed_pos)
         {
             irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_aimed_pos);
@@ -98,7 +98,7 @@ int main()
         {
             irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
             irrlicht_handler.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
-        }
+        }*/
 
         //Drawing
         irrlicht_handler.begin_drawing();
