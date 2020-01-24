@@ -1,8 +1,10 @@
 #include "irrlicht_handler.h"
 #include <string>
 
-IrrlichtHandler::IrrlichtHandler(bool vsync)
-:b_vsync(vsync)
+IrrlichtHandler::IrrlichtHandler(bool vsync, bool fullscreen,
+unsigned int width, unsigned int height)
+:b_vsync(vsync), b_fullscreen(fullscreen),
+i_width(width), i_height(height)
 {
 
 }
@@ -10,7 +12,7 @@ IrrlichtHandler::IrrlichtHandler(bool vsync)
 bool IrrlichtHandler::create_device()
 {
     irr_device = irr::createDevice(irr::video::EDT_OPENGL,
-        irr::core::dimension2d<irr::u32>(640,480), 16, false, false, b_vsync, &pmc_event_receiver);
+        irr::core::dimension2d<irr::u32>(i_width,i_height), 16, b_fullscreen, false, b_vsync, &pmc_event_receiver);
     if(!irr_device)
         return false;
 

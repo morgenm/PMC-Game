@@ -21,7 +21,10 @@ class IrrlichtHandler
 {
     PMCEventReceiver pmc_event_receiver;
     irr::IrrlichtDevice *irr_device;
-    const bool b_vsync;
+    bool b_vsync;
+    bool b_fullscreen;
+    unsigned int i_width;
+    unsigned int i_height;
 
     irr::video::IVideoDriver *driver;
     irr::scene::ISceneManager *scene_mgr;
@@ -29,11 +32,9 @@ class IrrlichtHandler
 
     irr::scene::ICameraSceneNode *fps_camera;
 
-    //std::vector<IrrlichtMesh> animated_meshes; //Move this to graphics engine
-
-    //MapMesh loaded_map_mesh;
 public:
-    IrrlichtHandler(bool vsync);
+    IrrlichtHandler(bool vsync, bool fullscreen,
+        unsigned int width, unsigned int height);
 
     bool create_device(); //Create an irrlicht device
     void drop_device();

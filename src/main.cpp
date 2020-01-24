@@ -11,8 +11,12 @@
 int main()
 {
     bool b_vsync = false;
+    bool b_fullscreen = false;
+    unsigned int i_width = 640;
+    unsigned int i_height = 480;
 
-    IrrlichtHandler irrlicht_handler(b_vsync);
+    IrrlichtHandler irrlicht_handler(b_vsync, b_fullscreen,
+        i_width, i_height);
     irrlicht_handler.create_device();
 
     GraphicsEngine graphics_engine(&irrlicht_handler);
@@ -39,10 +43,10 @@ int main()
 
     Player player(vec3f(0,0,0));
     PlayerGun player_gun;
+    bool player_walk = false;
 
     unsigned int then = irrlicht_handler.get_time();
-    const int move_speed = 3;
-    bool player_walk = false;
+
     while(irrlicht_handler.run())
     {
         unsigned int now = irrlicht_handler.get_time();
