@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include "player.h"
 #include "player_gun.h"
 #include "irrlicht/irrlicht_handler.h"
 #include "graphics_engine.h"
@@ -36,15 +37,19 @@ int main()
     graphics_engine.load_map_mesh_from_file("../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
     graphics_engine.set_map_mesh_position(vec3(-1300,-144,-1249));
 
+    Player player(vec3f(0,0,0));
     PlayerGun player_gun;
 
     unsigned int then = irrlicht_handler.get_time();
     const int move_speed = 3;
+    bool player_walk = false;
     while(irrlicht_handler.run())
     {
         unsigned int now = irrlicht_handler.get_time();
         const float frame_delta_time = (now-then)/1000.f;
         then = now;
+
+        vec3f player_move_vec(0,0,0);
 
         //User Input
         if(irrlicht_handler.is_key_down(irr::KEY_ESCAPE))
@@ -55,30 +60,46 @@ int main()
         if(irrlicht_handler.is_key_down(irr::KEY_KEY_W))
         {
             const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
-            float dx = move_speed * std::sin(rotY*PI/180.f);
-            float dz = move_speed * std::cos(rotY*PI/180.f);
-            irrlicht_handler.move_fps_camera(dx, 0, dz);
+            float dx = std::sin(rotY*PI/180.f);
+            float dz = std::cos(rotY*PI/180.f);
+            if(!isnan(dx))
+                player_move_vec.x += dx;
+            if(!isnan(dz))
+                player_move_vec.z += dz;
+            player_walk = true;
         }
         if(irrlicht_handler.is_key_down(irr::KEY_KEY_S))
         {
             const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
-            float dx = move_speed * std::sin(rotY*PI/180.f);
-            float dz = move_speed * std::cos(rotY*PI/180.f);
-            irrlicht_handler.move_fps_camera(-dx, 0, -dz);
+            float dx = std::sin(rotY*PI/180.f);
+            float dz = std::cos(rotY*PI/180.f);
+            if(!isnan(dx))
+                player_move_vec.x -= dx;
+            if(!isnan(dz))
+                player_move_vec.z -= dz;
+            player_walk = true;
         }
         if(irrlicht_handler.is_key_down(irr::KEY_KEY_D))
         {
             const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
-            float dx = move_speed * std::sin((rotY+90)*PI/180.f);
-            float dz = move_speed * std::cos((rotY+90)*PI/180.f);
-            irrlicht_handler.move_fps_camera(dx, 0, dz);
+            float dx = std::sin((rotY+90)*PI/180.f);
+            float dz =  std::cos((rotY+90)*PI/180.f);
+            if(!isnan(dx))
+                player_move_vec.x += dx;
+            if(!isnan(dz))
+                player_move_vec.z += dz;
+            player_walk = true;
         }
         if(irrlicht_handler.is_key_down(irr::KEY_KEY_A))
         {
             const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
-            float dx = move_speed * std::sin((rotY+90)*PI/180.f);
-            float dz = move_speed * std::cos((rotY+90)*PI/180.f);
-            irrlicht_handler.move_fps_camera(-dx, 0, -dz);
+            float dx = std::sin((rotY+90)*PI/180.f);
+            float dz = std::cos((rotY+90)*PI/180.f);
+            if(!isnan(dx))
+                player_move_vec.x -= dx;
+            if(!isnan(dz))
+                player_move_vec.z -= dz;
+            player_walk = true;
         }
 
         if(irrlicht_handler.is_mouse_down(1))
@@ -86,7 +107,23 @@ int main()
             player_gun.try_aim_change();
         }
 
+
+        irrlicht_handler.set_fps_camera_position(player.get_position());
+
+        if(player_move_vec.get_magnitude() != 0)
+            player.walk(player_move_vec.get_normalized());
+        else
+            player_walk = false;
+        player_move_vec = vec3f(0,0,0);
+
+        if(!player_walk)
+            player.stop_walk();
+        else
+            player_walk = false;
+
+        player.update();
         player_gun.update(frame_delta_time);
+
 
         /*vec3 gun_mesh_position = irrlicht_handler.get_animated_mesh_position(gun_mesh);
         if(player_gun.get_aimed() && gun_mesh_position != gun_mesh_aimed_pos)

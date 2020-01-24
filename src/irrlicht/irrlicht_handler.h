@@ -59,6 +59,7 @@ public:
     //void add_fps_camera(int x, int y, int z);
     void add_fps_camera(vec3 pos);
     void move_fps_camera(float dx, float dy, float dz);
+    void set_fps_camera_position(vec3f pos);
     float get_fps_camera_rotation_x() const;
     float get_fps_camera_rotation_y() const;
     float get_fps_camera_rotation_z() const;

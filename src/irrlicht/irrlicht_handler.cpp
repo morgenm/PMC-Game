@@ -125,6 +125,13 @@ void IrrlichtHandler::move_fps_camera(float dx, float dy, float dz)
         fps_camera_position.Y+dy, fps_camera_position.Z+dz);
     fps_camera->setPosition(new_pos);
 }
+
+void IrrlichtHandler::set_fps_camera_position(vec3f pos)
+{
+    const irr::core::vector3df new_pos(pos.x, pos.y, pos.z);
+    fps_camera->setPosition(new_pos);
+}
+
 float IrrlichtHandler::get_fps_camera_rotation_x() const
 {
     return fps_camera->getRotation().X;
