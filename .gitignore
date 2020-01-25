@@ -1,4 +1,4 @@
 *.exe
-pmc
+bin/
 *.dll
 resources/

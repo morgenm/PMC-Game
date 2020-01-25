@@ -60,7 +60,6 @@ public:
     vec3f get_animated_mesh_position(IrrlichtMesh *mesh) const;
     vec3f get_animed_mesh_rotation(IrrlichtMesh *mesh) const;
 
-    //void add_fps_camera(int x, int y, int z);
     void add_fps_camera(vec3f pos);
     void move_fps_camera(float dx, float dy, float dz);
     void set_fps_camera_position(vec3f pos);
