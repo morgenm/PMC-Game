@@ -93,30 +93,30 @@ void IrrlichtHandler::set_animated_mesh_position(IrrlichtMesh *mesh, float x, fl
     mesh->node->setPosition(irr::core::vector3df(x,y,z));
 }
 
-void IrrlichtHandler::set_animated_mesh_position(IrrlichtMesh *mesh, vec3 pos)
+void IrrlichtHandler::set_animated_mesh_position(IrrlichtMesh *mesh, vec3f pos)
 {
-    mesh->node->setPosition(pos);
+    mesh->node->setPosition(vec3f_to_vector3df(pos));
 }
 
-void IrrlichtHandler::set_animated_mesh_rotation(IrrlichtMesh *mesh, vec3 rot)
+void IrrlichtHandler::set_animated_mesh_rotation(IrrlichtMesh *mesh, vec3f rot)
 {
-    mesh->node->setRotation(rot);
+    mesh->node->setRotation(vec3f_to_vector3df(rot));
 }
 
-vec3 IrrlichtHandler::get_animated_mesh_position(IrrlichtMesh *mesh) const
+vec3f IrrlichtHandler::get_animated_mesh_position(IrrlichtMesh *mesh) const
 {
-    return mesh->node->getPosition();
+    return vector3df_to_vec3f(mesh->node->getPosition());
 }
 
-vec3 IrrlichtHandler::get_animed_mesh_rotation(IrrlichtMesh *mesh) const
+vec3f IrrlichtHandler::get_animed_mesh_rotation(IrrlichtMesh *mesh) const
 {
-    return mesh->node->getRotation();
+    return vector3df_to_vec3f(mesh->node->getRotation());
 }
 
-void IrrlichtHandler::add_fps_camera(vec3 pos)
+void IrrlichtHandler::add_fps_camera(vec3f pos)
 {
     fps_camera = scene_mgr->addCameraSceneNodeFPS();
-    fps_camera->setPosition(pos);
+    fps_camera->setPosition(vec3f_to_vector3df(pos));
     irr_device->getCursorControl()->setVisible(false);
 }
 
@@ -130,8 +130,7 @@ void IrrlichtHandler::move_fps_camera(float dx, float dy, float dz)
 
 void IrrlichtHandler::set_fps_camera_position(vec3f pos)
 {
-    const irr::core::vector3df new_pos(pos.x, pos.y, pos.z);
-    fps_camera->setPosition(new_pos);
+    fps_camera->setPosition(vec3f_to_vector3df(pos));
 }
 
 float IrrlichtHandler::get_fps_camera_rotation_x() const
@@ -180,7 +179,18 @@ MapMesh IrrlichtHandler::add_octree_mesh(std::string mesh_name)
     return new_mesh;
 }
 
-void IrrlichtHandler::set_map_mesh_position(MapMesh* mesh, vec3 pos)
+void IrrlichtHandler::set_map_mesh_position(MapMesh* mesh, vec3f pos)
 {
-    mesh->node->setPosition(pos);
+    mesh->node->setPosition(vec3f_to_vector3df(pos));
+}
+
+
+irr::core::vector3df IrrlichtHandler::vec3f_to_vector3df(vec3f v) const
+{
+    return irr::core::vector3df(v.x,v.y,v.z);
+}
+
+vec3f IrrlichtHandler::vector3df_to_vec3f(irr::core::vector3df v) const
+{
+    return vec3f(v.X, v.Y, v.Z);
 }

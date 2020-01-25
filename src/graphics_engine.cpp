@@ -21,7 +21,7 @@ unsigned int GraphicsEngine::load_animated_mesh(std::string mesh_loc)
     return id;
 }
 
-void GraphicsEngine::add_fps_camera(vec3 pos)
+void GraphicsEngine::add_fps_camera(vec3f pos)
 {
     irrlicht_handler->add_fps_camera(pos);
 }
@@ -36,12 +36,12 @@ void GraphicsEngine::set_animated_mesh_parent_to_fps_camera(unsigned int mesh_id
     irrlicht_handler->set_animated_mesh_parent_to_fps_camera(&animated_meshes[mesh_id]);
 }
 
-void GraphicsEngine::set_animated_mesh_position(unsigned int mesh_id, vec3 pos)
+void GraphicsEngine::set_animated_mesh_position(unsigned int mesh_id, vec3f pos)
 {
     irrlicht_handler->set_animated_mesh_position(&animated_meshes[mesh_id], pos);
 }
 
-void GraphicsEngine::set_animated_mesh_rotation(unsigned int mesh_id, vec3 rot)
+void GraphicsEngine::set_animated_mesh_rotation(unsigned int mesh_id, vec3f rot)
 {
     irrlicht_handler->set_animated_mesh_rotation(&animated_meshes[mesh_id], rot);
 }
@@ -52,7 +52,7 @@ void GraphicsEngine::load_map_mesh_from_file(std::string map_loc, std::string ma
     loaded_map = irrlicht_handler->add_octree_mesh(map_name);
 }
 
-void GraphicsEngine::set_map_mesh_position(vec3 pos)
+void GraphicsEngine::set_map_mesh_position(vec3f pos)
 {
     irrlicht_handler->set_map_mesh_position(&loaded_map, pos);
 }

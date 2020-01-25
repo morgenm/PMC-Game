@@ -12,8 +12,8 @@ int main()
 {
     bool b_vsync = false;
     bool b_fullscreen = false;
-    unsigned int i_width = 640;
-    unsigned int i_height = 480;
+    unsigned int i_width = 1280;
+    unsigned int i_height = 720;
 
     IrrlichtHandler irrlicht_handler(b_vsync, b_fullscreen,
         i_width, i_height);
@@ -24,22 +24,22 @@ int main()
     unsigned int sydney = graphics_engine.load_animated_mesh("../irrlicht_engine/media/sydney.md2");
     graphics_engine.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
 
-    graphics_engine.add_fps_camera(vec3(0,30,-40));
+    graphics_engine.add_fps_camera(vec3f(0,30,-40));
 
     unsigned int gun_mesh = graphics_engine.load_animated_mesh("resources/temp_gun/temp_gun.obj");
     graphics_engine.set_animated_mesh_parent_to_fps_camera(gun_mesh);
 
-    vec3 gun_mesh_default_pos(3,-3,12);
-    vec3 gun_mesh_default_rot(0,-120,0);
-    vec3 gun_mesh_aimed_pos(0,-1,8);
-    vec3 gun_mesh_aimed_rot(-60,-90,60);
+    vec3f gun_mesh_default_pos(3,-3,12);
+    vec3f gun_mesh_default_rot(0,-120,0);
+    vec3f gun_mesh_aimed_pos(0,-1,8);
+    vec3f gun_mesh_aimed_rot(-60,-90,60);
 
     graphics_engine.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
     graphics_engine.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
 
     //Quake3 Level
     graphics_engine.load_map_mesh_from_file("../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
-    graphics_engine.set_map_mesh_position(vec3(-1300,-144,-1249));
+    graphics_engine.set_map_mesh_position(vec3f(-1300,-144,-1249));
 
     Player player(vec3f(0,0,0));
     PlayerGun player_gun;

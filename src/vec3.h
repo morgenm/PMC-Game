@@ -1,11 +1,16 @@
+/*
+vec3.h
+This contains the vec3f struct.
+This is pretty much the same as the irr::core::vec3df but this is
+here to reduce reliance on the irrlicht library for the sake of good
+programming practices and in case we want to switch to a different
+graphics engine.
+*/
+
 #ifndef VEC_3_H
 #define VEC_3_H
 
-#include <irrlicht.h>
 #include <math.h>
-#include <iostream>
-
-#define vec3 irr::core::vector3df
 
 struct vec3f
 {

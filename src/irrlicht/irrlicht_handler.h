@@ -32,6 +32,9 @@ class IrrlichtHandler
 
     irr::scene::ICameraSceneNode *fps_camera;
 
+    irr::core::vector3df vec3f_to_vector3df(vec3f v) const;
+    vec3f vector3df_to_vec3f(irr::core::vector3df v) const;
+
 public:
     IrrlichtHandler(bool vsync, bool fullscreen,
         unsigned int width, unsigned int height);
@@ -51,14 +54,14 @@ public:
     void set_animated_mesh_parent_to_fps_camera(IrrlichtMesh *mesh);
 
     void set_animated_mesh_position(IrrlichtMesh *mesh, float x, float y, float z);
-    void set_animated_mesh_position(IrrlichtMesh *mesh, vec3 pos);
-    void set_animated_mesh_rotation(IrrlichtMesh *mesh, vec3 rot);
+    void set_animated_mesh_position(IrrlichtMesh *mesh, vec3f pos);
+    void set_animated_mesh_rotation(IrrlichtMesh *mesh, vec3f rot);
 
-    vec3 get_animated_mesh_position(IrrlichtMesh *mesh) const;
-    vec3 get_animed_mesh_rotation(IrrlichtMesh *mesh) const;
+    vec3f get_animated_mesh_position(IrrlichtMesh *mesh) const;
+    vec3f get_animed_mesh_rotation(IrrlichtMesh *mesh) const;
 
     //void add_fps_camera(int x, int y, int z);
-    void add_fps_camera(vec3 pos);
+    void add_fps_camera(vec3f pos);
     void move_fps_camera(float dx, float dy, float dz);
     void set_fps_camera_position(vec3f pos);
     float get_fps_camera_rotation_x() const;
@@ -75,6 +78,6 @@ public:
     /* Load an octree mesh. This is an optimized mesh handled by irrlicht which
     only loads visible geometry. */
     MapMesh add_octree_mesh(std::string mesh_name);
-    void set_map_mesh_position(MapMesh* mesh, vec3 pos);
+    void set_map_mesh_position(MapMesh* mesh, vec3f pos);
 };
 #endif
