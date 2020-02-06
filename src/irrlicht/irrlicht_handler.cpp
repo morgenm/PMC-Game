@@ -103,6 +103,11 @@ void IrrlichtHandler::set_animated_mesh_rotation(IrrlichtMesh *mesh, vec3f rot)
     mesh->node->setRotation(vec3f_to_vector3df(rot));
 }
 
+void IrrlichtHandler::set_animated_mesh_scale(IrrlichtMesh *mesh, vec3f scale)
+{
+    mesh->node->setScale(vec3f_to_vector3df(scale));
+}
+
 vec3f IrrlichtHandler::get_animated_mesh_position(IrrlichtMesh *mesh) const
 {
     return vector3df_to_vec3f(mesh->node->getPosition());
@@ -184,6 +189,10 @@ void IrrlichtHandler::set_map_mesh_position(MapMesh* mesh, vec3f pos)
     mesh->node->setPosition(vec3f_to_vector3df(pos));
 }
 
+void  IrrlichtHandler::set_map_mesh_scale(MapMesh* mesh, vec3f scale)
+{
+    mesh->node->setScale(vec3f_to_vector3df(scale));
+}
 
 irr::core::vector3df IrrlichtHandler::vec3f_to_vector3df(vec3f v) const
 {

@@ -1,10 +1,12 @@
 #include <iostream>
 #include <cmath>
+#include "btBulletDynamicsCommon.h"
 #include "player.h"
 #include "player_gun.h"
 #include "irrlicht/irrlicht_handler.h"
 #include "graphics_engine.h"
 #include "vec3.h"
+#include "box.h"
 
 #define PI std::acos(-1)
 
@@ -23,8 +25,10 @@ int main()
 
     unsigned int sydney = graphics_engine.load_animated_mesh("../irrlicht_engine/media/sydney.md2");
     graphics_engine.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
+    graphics_engine.set_animated_mesh_scale(sydney, vec3f(1.5,1.5,1.5));
+    graphics_engine.set_animated_mesh_position(sydney, vec3f(100,-40,100));
 
-    graphics_engine.add_fps_camera(vec3f(0,30,-40));
+    graphics_engine.add_fps_camera(vec3f(0,0,0));
 
     unsigned int gun_mesh = graphics_engine.load_animated_mesh("resources/temp_gun/temp_gun.obj");
     graphics_engine.set_animated_mesh_parent_to_fps_camera(gun_mesh);
@@ -41,17 +45,53 @@ int main()
     graphics_engine.load_map_mesh_from_file("../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
     graphics_engine.set_map_mesh_position(vec3f(-1300,-144,-1249));
 
+    Box box(vec3f(100,0,200), vec3f(0,0,0));
+    unsigned int box_mesh = graphics_engine.load_animated_mesh("resources/temp_box/temp_box.obj");
+    graphics_engine.set_animated_mesh_texture(box_mesh, "resources/temp_box/temp_box.jpg");
+    graphics_engine.set_animated_mesh_position(box_mesh, box.get_position());
+    graphics_engine.set_animated_mesh_rotation(box_mesh, box.get_rotation());
+    graphics_engine.set_animated_mesh_scale(box_mesh, vec3f(20,20,20));
+
     Player player(vec3f(0,0,0));
     PlayerGun player_gun;
     bool player_walk = false;
+
+    /* PHYSICS SETUP*/
+    btDefaultCollisionConfiguration *col_config = new btDefaultCollisionConfiguration();
+    btCollisionDispatcher *dispatcher = new btCollisionDispatcher(col_config);
+    btBroadphaseInterface *overlapping_pair_cache = new btDbvtBroadphase();
+    btSequentialImpulseConstraintSolver *solver = new btSequentialImpulseConstraintSolver;
+    btDiscreteDynamicsWorld *dynamics_world = new btDiscreteDynamicsWorld(
+        dispatcher, overlapping_pair_cache, solver, col_config
+    );
+
+    dynamics_world->setGravity(btVector3(0,-10,0));
+
+    /*btBoxShape *box_shape = new btBoxShape(btVector3(
+        1, 1, 1
+    ));
+    btTransform box_physics_pos;
+    box_physics_pos.setIdentity();
+    box_physics_pos.setOrigin(btVector3(
+        btScalar(box.get_position().x),
+        btScalar(box.get_position().y),
+        btScalar(box.get_position().z)
+    ));
+
+    btDefaultMotionState *m_state = new btDefaultMotionState(box_physics_pos);
+    btRigidBody::btRigidBodyConstructionInfo c_info(100, m_state, box_shape, btVector3(0,0,0));
+    btRigidBody *box_rig_body = new btRigidBody(c_info);*/
+
+    //box_rig_body->setWorldTransform(box_physics_pos);
+    //dynamics_world->addRigidBody(box_rig_body);
+    /* END PHYSICS SETUP*/
 
     unsigned int then = irrlicht_handler.get_time();
 
     while(irrlicht_handler.run())
     {
-        unsigned int now = irrlicht_handler.get_time();
+        const unsigned int now = irrlicht_handler.get_time();
         const float frame_delta_time = (now-then)/1000.f;
-        then = now;
 
         vec3f player_move_vec(0,0,0);
 
@@ -111,7 +151,6 @@ int main()
             player_gun.try_aim_change();
         }
 
-
         irrlicht_handler.set_fps_camera_position(player.get_position());
 
         if(player_move_vec.get_magnitude() != 0)
@@ -128,27 +167,47 @@ int main()
         player.update();
         player_gun.update(frame_delta_time);
 
+        //dynamics_world->stepSimulation(frame_delta_time);
 
-        /*vec3 gun_mesh_position = irrlicht_handler.get_animated_mesh_position(gun_mesh);
-        if(player_gun.get_aimed() && gun_mesh_position != gun_mesh_aimed_pos)
-        {
-            irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_aimed_pos);
-            irrlicht_handler.set_animated_mesh_rotation(gun_mesh, gun_mesh_aimed_rot);
-        }
-        else if(!player_gun.get_aimed() && gun_mesh_position == gun_mesh_aimed_pos)
-        {
-            irrlicht_handler.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
-            irrlicht_handler.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
-        }*/
+        then = now;
+        //std::cout << "Physics done\n";
+
+        /*END PHYSICS UPDATE*/
+
+        graphics_engine.set_animated_mesh_position(box_mesh, box.get_position());
+        graphics_engine.set_animated_mesh_rotation(box_mesh, box.get_rotation());
 
         //Drawing
         irrlicht_handler.begin_drawing();
         irrlicht_handler.draw_scene();
         irrlicht_handler.draw_gui();
         irrlicht_handler.end_drawing();
+
     }
 
+    //dynamics_world->removeRigidBody(box_rig_body);
+    //delete box_rig_body;
+    //delete box_shape;
+
     irrlicht_handler.drop_device();
+
+    for(int i=dynamics_world->getNumCollisionObjects()-1; i>=0; i--)
+    {
+        btCollisionObject *obj = dynamics_world->getCollisionObjectArray()[i];
+        btRigidBody *rb = btRigidBody::upcast(obj);
+        if(rb && rb->getMotionState())
+        {
+            delete rb->getMotionState();
+        }
+        dynamics_world->removeCollisionObject(obj);
+        delete obj;
+    }
+
+    delete dynamics_world;
+    delete solver;
+    delete overlapping_pair_cache;
+    delete dispatcher;
+    delete col_config;
 
     return 0;
 }

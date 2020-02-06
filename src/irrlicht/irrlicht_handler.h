@@ -56,6 +56,7 @@ public:
     void set_animated_mesh_position(IrrlichtMesh *mesh, float x, float y, float z);
     void set_animated_mesh_position(IrrlichtMesh *mesh, vec3f pos);
     void set_animated_mesh_rotation(IrrlichtMesh *mesh, vec3f rot);
+    void set_animated_mesh_scale(IrrlichtMesh *mesh, vec3f scale);
 
     vec3f get_animated_mesh_position(IrrlichtMesh *mesh) const;
     vec3f get_animed_mesh_rotation(IrrlichtMesh *mesh) const;
@@ -78,5 +79,6 @@ public:
     only loads visible geometry. */
     MapMesh add_octree_mesh(std::string mesh_name);
     void set_map_mesh_position(MapMesh* mesh, vec3f pos);
+    void set_map_mesh_scale(MapMesh* mesh, vec3f scale);
 };
 #endif

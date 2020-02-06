@@ -28,9 +28,11 @@ public:
     void set_animated_mesh_parent_to_fps_camera(unsigned int mesh_id);
     void set_animated_mesh_position(unsigned int mesh_id, vec3f pos);
     void set_animated_mesh_rotation(unsigned int mesh_id, vec3f rot);
+    void set_animated_mesh_scale(unsigned int mesh_id, vec3f scale);
 
     void load_map_mesh_from_file(std::string map_loc, std::string map_name);
     void set_map_mesh_position(vec3f pos);
+    void set_map_mesh_scale(vec3f scale);
 };
 
 #endif

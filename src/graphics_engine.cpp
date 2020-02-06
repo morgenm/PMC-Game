@@ -46,6 +46,11 @@ void GraphicsEngine::set_animated_mesh_rotation(unsigned int mesh_id, vec3f rot)
     irrlicht_handler->set_animated_mesh_rotation(&animated_meshes[mesh_id], rot);
 }
 
+void GraphicsEngine::set_animated_mesh_scale(unsigned int mesh_id, vec3f scale)
+{
+    irrlicht_handler->set_animated_mesh_scale(&animated_meshes[mesh_id], scale);
+}
+
 void GraphicsEngine::load_map_mesh_from_file(std::string map_loc, std::string map_name)
 {
     irrlicht_handler->load_file_archive(map_loc);
@@ -55,4 +60,9 @@ void GraphicsEngine::load_map_mesh_from_file(std::string map_loc, std::string ma
 void GraphicsEngine::set_map_mesh_position(vec3f pos)
 {
     irrlicht_handler->set_map_mesh_position(&loaded_map, pos);
+}
+
+void GraphicsEngine::set_map_mesh_scale(vec3f scale)
+{
+    irrlicht_handler->set_map_mesh_scale(&loaded_map, scale);
 }
