@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cmath>
+#include <memory>
+
 #include "btBulletDynamicsCommon.h"
 #include "player.h"
 #include "player_gun.h"
@@ -12,6 +14,8 @@
 
 int main()
 {
+
+
     bool b_vsync = false;
     bool b_fullscreen = false;
     unsigned int i_width = 1280;
@@ -22,16 +26,31 @@ int main()
     irrlicht_handler.create_device();
 
     GraphicsEngine graphics_engine(&irrlicht_handler);
+    /* PHYSICS SETUP*/
+    std::unique_ptr<btDefaultCollisionConfiguration> col_config(new btDefaultCollisionConfiguration());
+    std::unique_ptr<btCollisionDispatcher> dispatcher(new btCollisionDispatcher(col_config.get()));
+    std::unique_ptr<btBroadphaseInterface> overlapping_pair_cache(new btDbvtBroadphase());
+    std::unique_ptr<btSequentialImpulseConstraintSolver> solver(new btSequentialImpulseConstraintSolver);
+    std::unique_ptr<btDiscreteDynamicsWorld> dynamics_world(new btDiscreteDynamicsWorld(
+        dispatcher.get(), overlapping_pair_cache.get(), solver.get(), col_config.get()
+    ));
+
+    dynamics_world->setGravity(btVector3(0,-10,0));
+    std::cout << "Physics setup complete\n";
 
     unsigned int sydney = graphics_engine.load_animated_mesh("../irrlicht_engine/media/sydney.md2");
     graphics_engine.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
     graphics_engine.set_animated_mesh_scale(sydney, vec3f(1.5,1.5,1.5));
     graphics_engine.set_animated_mesh_position(sydney, vec3f(100,-40,100));
 
+    std::cout << "Sydney loaded\n";
+
     graphics_engine.add_fps_camera(vec3f(0,0,0));
 
     unsigned int gun_mesh = graphics_engine.load_animated_mesh("resources/temp_gun/temp_gun.obj");
     graphics_engine.set_animated_mesh_parent_to_fps_camera(gun_mesh);
+
+    std::cout << "Gun loaded\n";
 
     vec3f gun_mesh_default_pos(3,-3,12);
     vec3f gun_mesh_default_rot(0,-120,0);
@@ -44,6 +63,7 @@ int main()
     //Quake3 Level
     graphics_engine.load_map_mesh_from_file("../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
     graphics_engine.set_map_mesh_position(vec3f(-1300,-144,-1249));
+    std::cout << "Map loaded\n";
 
     Box box(vec3f(100,0,200), vec3f(0,0,0));
     unsigned int box_mesh = graphics_engine.load_animated_mesh("resources/temp_box/temp_box.obj");
@@ -52,20 +72,11 @@ int main()
     graphics_engine.set_animated_mesh_rotation(box_mesh, box.get_rotation());
     graphics_engine.set_animated_mesh_scale(box_mesh, vec3f(20,20,20));
 
+    std::cout << "Box loaded\n";
+
     Player player(vec3f(0,0,0));
     PlayerGun player_gun;
     bool player_walk = false;
-
-    /* PHYSICS SETUP*/
-    btDefaultCollisionConfiguration *col_config = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher *dispatcher = new btCollisionDispatcher(col_config);
-    btBroadphaseInterface *overlapping_pair_cache = new btDbvtBroadphase();
-    btSequentialImpulseConstraintSolver *solver = new btSequentialImpulseConstraintSolver;
-    btDiscreteDynamicsWorld *dynamics_world = new btDiscreteDynamicsWorld(
-        dispatcher, overlapping_pair_cache, solver, col_config
-    );
-
-    dynamics_world->setGravity(btVector3(0,-10,0));
 
     /*btBoxShape *box_shape = new btBoxShape(btVector3(
         1, 1, 1
@@ -191,7 +202,7 @@ int main()
 
     irrlicht_handler.drop_device();
 
-    for(int i=dynamics_world->getNumCollisionObjects()-1; i>=0; i--)
+    /*for(int i=dynamics_world->getNumCollisionObjects()-1; i>=0; i--)
     {
         btCollisionObject *obj = dynamics_world->getCollisionObjectArray()[i];
         btRigidBody *rb = btRigidBody::upcast(obj);
@@ -201,13 +212,7 @@ int main()
         }
         dynamics_world->removeCollisionObject(obj);
         delete obj;
-    }
-
-    delete dynamics_world;
-    delete solver;
-    delete overlapping_pair_cache;
-    delete dispatcher;
-    delete col_config;
+    }*/
 
     return 0;
 }

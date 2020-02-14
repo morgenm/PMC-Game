@@ -177,9 +177,12 @@ MapMesh IrrlichtHandler::add_octree_mesh(std::string mesh_name)
 {
     MapMesh new_mesh;
     new_mesh.mesh = scene_mgr->getMesh(mesh_name.c_str());
+    //new_mesh.mesh = std::unique_ptr<irr::scene::IAnimatedMesh>(scene_mgr->getMesh(mesh_name.c_str()));
 
     new_mesh.node = scene_mgr->addOctreeSceneNode(new_mesh.mesh->getMesh(0),
         0, -1, 1024);
+    //new_mesh.node = std::unique_ptr<irr::scene::IMeshSceneNode>(scene_mgr->addOctreeSceneNode(new_mesh.mesh->getMesh(0),
+    //    0, -1, 1024));
 
     return new_mesh;
 }
