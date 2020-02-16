@@ -40,8 +40,11 @@ int main()
 
     unsigned int sydney = graphics_engine.load_animated_mesh("../irrlicht_engine/media/sydney.md2");
     graphics_engine.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
-    graphics_engine.set_animated_mesh_scale(sydney, vec3f(1.5,1.5,1.5));
-    graphics_engine.set_animated_mesh_position(sydney, vec3f(100,-40,100));
+    graphics_engine.set_animated_mesh_position(sydney, vec3f(1,0,1));
+    //graphics_engine.set_animated_mesh_scale(sydney, vec3f(0.01,0.01,0.01));
+
+    float sydney_scalar = 1/graphics_engine.get_animated_mesh_height(sydney);
+    graphics_engine.set_animated_mesh_scale(sydney, vec3f(sydney_scalar,sydney_scalar,sydney_scalar));
 
     std::cout << "Sydney loaded\n";
 
@@ -52,25 +55,34 @@ int main()
 
     std::cout << "Gun loaded\n";
 
-    vec3f gun_mesh_default_pos(3,-3,12);
+    vec3f gun_mesh_default_pos(0.05,-0.05,0.05);
     vec3f gun_mesh_default_rot(0,-120,0);
     vec3f gun_mesh_aimed_pos(0,-1,8);
     vec3f gun_mesh_aimed_rot(-60,-90,60);
 
+    float gun_scalar = (0.01)*graphics_engine.get_animated_mesh_height(gun_mesh);
+    graphics_engine.set_animated_mesh_scale(gun_mesh, vec3f(gun_scalar, gun_scalar, gun_scalar));
     graphics_engine.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
     graphics_engine.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
 
     //Quake3 Level
     graphics_engine.load_map_mesh_from_file("../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
-    graphics_engine.set_map_mesh_position(vec3f(-1300,-144,-1249));
+    //graphics_engine.set_map_mesh_position(vec3f(-1300,-144,-1249));
+    graphics_engine.set_map_mesh_position(vec3f(-20,-2,-20));
+    //graphics_engine.set_map_mesh_scale(vec3f(0.1,0.1,0.1));
+    float map_scalar = 10/graphics_engine.get_map_mesh_height();
+    graphics_engine.set_map_mesh_scale(vec3f(map_scalar,map_scalar,map_scalar));
     std::cout << "Map loaded\n";
 
-    Box box(vec3f(100,0,200), vec3f(0,0,0));
+    Box box(vec3f(1,0,2), vec3f(0,0,0));
     unsigned int box_mesh = graphics_engine.load_animated_mesh("resources/temp_box/temp_box.obj");
     graphics_engine.set_animated_mesh_texture(box_mesh, "resources/temp_box/temp_box.jpg");
     graphics_engine.set_animated_mesh_position(box_mesh, box.get_position());
     graphics_engine.set_animated_mesh_rotation(box_mesh, box.get_rotation());
-    graphics_engine.set_animated_mesh_scale(box_mesh, vec3f(20,20,20));
+    //graphics_engine.set_animated_mesh_scale(box_mesh, vec3f(20,20,20));
+
+    float box_scalar = 1/graphics_engine.get_animated_mesh_height(box_mesh);
+    graphics_engine.set_animated_mesh_scale(box_mesh, vec3f(box_scalar,box_scalar,box_scalar));
 
     std::cout << "Box loaded\n";
 
@@ -78,7 +90,7 @@ int main()
     PlayerGun player_gun;
     bool player_walk = false;
 
-    /*btBoxShape *box_shape = new btBoxShape(btVector3(
+    btBoxShape *box_shape = new btBoxShape(btVector3(
         1, 1, 1
     ));
     btTransform box_physics_pos;
@@ -91,10 +103,22 @@ int main()
 
     btDefaultMotionState *m_state = new btDefaultMotionState(box_physics_pos);
     btRigidBody::btRigidBodyConstructionInfo c_info(100, m_state, box_shape, btVector3(0,0,0));
-    btRigidBody *box_rig_body = new btRigidBody(c_info);*/
+    btRigidBody *box_rig_body = new btRigidBody(c_info);
 
-    //box_rig_body->setWorldTransform(box_physics_pos);
-    //dynamics_world->addRigidBody(box_rig_body);
+    box_rig_body->setWorldTransform(box_physics_pos);
+    dynamics_world->addRigidBody(box_rig_body);
+
+    //Ground collision
+    btCollisionShape *ground_shape = new btBoxShape(btVector3(
+        btScalar(50.f), btScalar(1.f), btScalar(50.f)
+    ));
+    btTransform ground_transform;
+    ground_transform.setIdentity();
+    ground_transform.setOrigin(btVector3(0,-2.5,0));
+    btDefaultMotionState *ground_state = new btDefaultMotionState(ground_transform);
+    btRigidBody::btRigidBodyConstructionInfo g_c_info(0,ground_state, ground_shape, btVector3(0,0,0));
+    btRigidBody *ground_body = new btRigidBody(g_c_info);
+    dynamics_world->addRigidBody(ground_body);
     /* END PHYSICS SETUP*/
 
     unsigned int then = irrlicht_handler.get_time();
@@ -178,9 +202,14 @@ int main()
         player.update();
         player_gun.update(frame_delta_time);
 
-        //dynamics_world->stepSimulation(frame_delta_time);
-
+        dynamics_world->stepSimulation(frame_delta_time);
         then = now;
+
+        btTransform box_transform;
+        box_rig_body->getMotionState()->getWorldTransform(box_transform);
+        //std::cout << box_transform.getOrigin().getX() << '\n';
+        vec3f box_pos(box_transform.getOrigin().getX(),box_transform.getOrigin().getY(),box_transform.getOrigin().getZ());
+        box.set_position(box_pos);
         //std::cout << "Physics done\n";
 
         /*END PHYSICS UPDATE*/
@@ -196,13 +225,16 @@ int main()
 
     }
 
-    //dynamics_world->removeRigidBody(box_rig_body);
-    //delete box_rig_body;
-    //delete box_shape;
+    dynamics_world->removeRigidBody(ground_body);
+    dynamics_world->removeRigidBody(box_rig_body);
+    delete ground_body;
+    delete ground_shape;
+    delete box_rig_body;
+    delete box_shape;
 
     irrlicht_handler.drop_device();
 
-    /*for(int i=dynamics_world->getNumCollisionObjects()-1; i>=0; i--)
+    for(int i=dynamics_world->getNumCollisionObjects()-1; i>=0; i--)
     {
         btCollisionObject *obj = dynamics_world->getCollisionObjectArray()[i];
         btRigidBody *rb = btRigidBody::upcast(obj);
@@ -212,7 +244,7 @@ int main()
         }
         dynamics_world->removeCollisionObject(obj);
         delete obj;
-    }*/
+    }
 
     return 0;
 }

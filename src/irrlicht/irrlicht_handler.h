@@ -59,7 +59,8 @@ public:
     void set_animated_mesh_scale(IrrlichtMesh *mesh, vec3f scale);
 
     vec3f get_animated_mesh_position(IrrlichtMesh *mesh) const;
-    vec3f get_animed_mesh_rotation(IrrlichtMesh *mesh) const;
+    vec3f get_animated_mesh_rotation(IrrlichtMesh *mesh) const;
+    float get_animated_mesh_height(IrrlichtMesh *mesh) const;
 
     void add_fps_camera(vec3f pos);
     void move_fps_camera(float dx, float dy, float dz);
@@ -80,5 +81,6 @@ public:
     MapMesh add_octree_mesh(std::string mesh_name);
     void set_map_mesh_position(MapMesh* mesh, vec3f pos);
     void set_map_mesh_scale(MapMesh* mesh, vec3f scale);
+    float get_map_mesh_height(MapMesh* mesh) const;
 };
 #endif

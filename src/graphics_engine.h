@@ -30,9 +30,13 @@ public:
     void set_animated_mesh_rotation(unsigned int mesh_id, vec3f rot);
     void set_animated_mesh_scale(unsigned int mesh_id, vec3f scale);
 
+    float get_animated_mesh_height(unsigned int mesh_id);
+
     void load_map_mesh_from_file(std::string map_loc, std::string map_name);
     void set_map_mesh_position(vec3f pos);
     void set_map_mesh_scale(vec3f scale);
+
+    float get_map_mesh_height();
 };
 
 #endif

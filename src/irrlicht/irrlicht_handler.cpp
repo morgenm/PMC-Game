@@ -113,15 +113,35 @@ vec3f IrrlichtHandler::get_animated_mesh_position(IrrlichtMesh *mesh) const
     return vector3df_to_vec3f(mesh->node->getPosition());
 }
 
-vec3f IrrlichtHandler::get_animed_mesh_rotation(IrrlichtMesh *mesh) const
+vec3f IrrlichtHandler::get_animated_mesh_rotation(IrrlichtMesh *mesh) const
 {
     return vector3df_to_vec3f(mesh->node->getRotation());
+}
+
+float IrrlichtHandler::get_animated_mesh_height(IrrlichtMesh *mesh) const
+{
+    const irr::core::aabbox3d<irr::f32> bounding_box = mesh->mesh->getBoundingBox();
+    irr::core::vector3d<irr::f32> edges[8];
+    bounding_box.getEdges(edges);
+
+    //Find max and min Y
+    float max_Y = edges[0].Y;
+    float min_Y = edges[0].Y;
+    for(int i=0; i<8; i++)
+    {
+        if(edges[i].Y>max_Y)
+            max_Y = edges[i].Y;
+        else if(edges[i].Y<min_Y)
+            min_Y = edges[i].Y;
+    }
+    return max_Y-min_Y;
 }
 
 void IrrlichtHandler::add_fps_camera(vec3f pos)
 {
     fps_camera = scene_mgr->addCameraSceneNodeFPS();
     fps_camera->setPosition(vec3f_to_vector3df(pos));
+    fps_camera->setNearValue(0.01);
     irr_device->getCursorControl()->setVisible(false);
 }
 
@@ -192,9 +212,28 @@ void IrrlichtHandler::set_map_mesh_position(MapMesh* mesh, vec3f pos)
     mesh->node->setPosition(vec3f_to_vector3df(pos));
 }
 
-void  IrrlichtHandler::set_map_mesh_scale(MapMesh* mesh, vec3f scale)
+void IrrlichtHandler::set_map_mesh_scale(MapMesh* mesh, vec3f scale)
 {
     mesh->node->setScale(vec3f_to_vector3df(scale));
+}
+
+float IrrlichtHandler::get_map_mesh_height(MapMesh* mesh) const
+{
+    const irr::core::aabbox3d<irr::f32> bounding_box = mesh->mesh->getBoundingBox();
+    irr::core::vector3d<irr::f32> edges[8];
+    bounding_box.getEdges(edges);
+
+    //Find max and min Y
+    float max_Y = edges[0].Y;
+    float min_Y = edges[0].Y;
+    for(int i=0; i<8; i++)
+    {
+        if(edges[i].Y>max_Y)
+            max_Y = edges[i].Y;
+        else if(edges[i].Y<min_Y)
+            min_Y = edges[i].Y;
+    }
+    return max_Y-min_Y;
 }
 
 irr::core::vector3df IrrlichtHandler::vec3f_to_vector3df(vec3f v) const

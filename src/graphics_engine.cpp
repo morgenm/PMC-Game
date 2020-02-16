@@ -51,6 +51,11 @@ void GraphicsEngine::set_animated_mesh_scale(unsigned int mesh_id, vec3f scale)
     irrlicht_handler->set_animated_mesh_scale(&animated_meshes[mesh_id], scale);
 }
 
+float GraphicsEngine::get_animated_mesh_height(unsigned int mesh_id)
+{
+    return irrlicht_handler->get_animated_mesh_height(&animated_meshes[mesh_id]);
+}
+
 void GraphicsEngine::load_map_mesh_from_file(std::string map_loc, std::string map_name)
 {
     irrlicht_handler->load_file_archive(map_loc);
@@ -65,4 +70,9 @@ void GraphicsEngine::set_map_mesh_position(vec3f pos)
 void GraphicsEngine::set_map_mesh_scale(vec3f scale)
 {
     irrlicht_handler->set_map_mesh_scale(&loaded_map, scale);
+}
+
+float GraphicsEngine::get_map_mesh_height()
+{
+    return irrlicht_handler->get_map_mesh_height(&loaded_map);
 }
