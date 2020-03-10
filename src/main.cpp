@@ -38,8 +38,8 @@ int main()
     dynamics_world->setGravity(btVector3(0,-10,0));
     std::cout << "Physics setup complete\n";
 
-    unsigned int sydney = graphics_engine.load_animated_mesh("../irrlicht_engine/media/sydney.md2");
-    graphics_engine.set_animated_mesh_texture(sydney, "../irrlicht_engine/media/sydney.bmp");
+    unsigned int sydney = graphics_engine.load_animated_mesh("../../irrlicht_engine/media/sydney.md2");
+    graphics_engine.set_animated_mesh_texture(sydney, "../../irrlicht_engine/media/sydney.bmp");
     graphics_engine.set_animated_mesh_position(sydney, vec3f(1,0,1));
     //graphics_engine.set_animated_mesh_scale(sydney, vec3f(0.01,0.01,0.01));
 
@@ -50,7 +50,7 @@ int main()
 
     graphics_engine.add_fps_camera(vec3f(0,0,0));
 
-    unsigned int gun_mesh = graphics_engine.load_animated_mesh("resources/temp_gun/temp_gun.obj");
+    unsigned int gun_mesh = graphics_engine.load_animated_mesh("../resources/temp_gun/temp_gun.obj");
     graphics_engine.set_animated_mesh_parent_to_fps_camera(gun_mesh);
 
     std::cout << "Gun loaded\n";
@@ -66,7 +66,7 @@ int main()
     graphics_engine.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
 
     //Quake3 Level
-    graphics_engine.load_map_mesh_from_file("../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
+    graphics_engine.load_map_mesh_from_file("../../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
     //graphics_engine.set_map_mesh_position(vec3f(-1300,-144,-1249));
     graphics_engine.set_map_mesh_position(vec3f(-20,-2,-20));
     //graphics_engine.set_map_mesh_scale(vec3f(0.1,0.1,0.1));
@@ -75,8 +75,8 @@ int main()
     std::cout << "Map loaded\n";
 
     Box box(vec3f(1,0,2), vec3f(0,0,0));
-    unsigned int box_mesh = graphics_engine.load_animated_mesh("resources/temp_box/temp_box.obj");
-    graphics_engine.set_animated_mesh_texture(box_mesh, "resources/temp_box/temp_box.jpg");
+    unsigned int box_mesh = graphics_engine.load_animated_mesh("../resources/temp_box/temp_box.obj");
+    graphics_engine.set_animated_mesh_texture(box_mesh, "../resources/temp_box/temp_box.jpg");
     graphics_engine.set_animated_mesh_position(box_mesh, box.get_position());
     graphics_engine.set_animated_mesh_rotation(box_mesh, box.get_rotation());
     //graphics_engine.set_animated_mesh_scale(box_mesh, vec3f(20,20,20));
