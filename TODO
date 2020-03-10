@@ -1,0 +1,4 @@
+- Fix the lagging error on Windows. Only occurs when laptop is unplugged, so
+	perhaps its an error with Power Saving.
+- Fix the "Switch to fullscreen: The graphics mode is not supported."
+	This doesn't seem to have any real effect on the program though.
