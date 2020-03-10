@@ -50,4 +50,9 @@ target_link_libraries(PMC ${Irrlicht} ${BulletDynamics} ${BulletCollision} ${Bul
 if(WIN32)
 	target_compile_options(PMC PRIVATE /MT)
 	target_link_options(PMC PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
+	add_custom_command(
+		TARGET PMC POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:PMC> ${CMAKE_SOURCE_DIR}/build/PMC.exe
+		COMMENT "Created PMC."
+	)
 endif()
