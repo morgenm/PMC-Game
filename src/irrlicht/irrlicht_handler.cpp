@@ -72,9 +72,6 @@ IrrlichtMesh IrrlichtHandler::add_animated_mesh(std::string mesh_loc)
 
     new_mesh.node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
     return new_mesh;
-    //animated_meshes.push_back(new_mesh);
-    //return &animated_meshes.back();
-    //node->setMD2Animation(irr::scene::EMAT_STAND);
 }
 
 void IrrlichtHandler::set_animated_mesh_texture(IrrlichtMesh* mesh, std::string texture_loc)
@@ -142,6 +139,7 @@ void IrrlichtHandler::add_fps_camera(vec3f pos)
     fps_camera = scene_mgr->addCameraSceneNodeFPS();
     fps_camera->setPosition(vec3f_to_vector3df(pos));
     fps_camera->setNearValue(0.01);
+    fps_camera->setFarValue(10000); //Ridiculously large
     irr_device->getCursorControl()->setVisible(false);
 }
 

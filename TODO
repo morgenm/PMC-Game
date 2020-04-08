@@ -2,3 +2,4 @@
 	perhaps its an error with Power Saving.
 - Fix the "Switch to fullscreen: The graphics mode is not supported."
 	This doesn't seem to have any real effect on the program though.
+	*) This is due to ProtonSDK. Probably not a problem
