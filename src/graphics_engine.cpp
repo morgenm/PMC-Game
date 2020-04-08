@@ -59,7 +59,7 @@ float GraphicsEngine::get_animated_mesh_height(unsigned int mesh_id)
 void GraphicsEngine::load_map_mesh_from_file(std::string map_loc, std::string map_name)
 {
     irrlicht_handler->load_file_archive(map_loc);
-    loaded_map = irrlicht_handler->add_octree_mesh(map_name);
+    loaded_map = irrlicht_handler->add_map_mesh(map_name);
 }
 
 void GraphicsEngine::set_map_mesh_position(vec3f pos)

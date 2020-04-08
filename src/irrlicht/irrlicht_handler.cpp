@@ -140,6 +140,7 @@ void IrrlichtHandler::add_fps_camera(vec3f pos)
     fps_camera->setPosition(vec3f_to_vector3df(pos));
     fps_camera->setNearValue(0.01);
     fps_camera->setFarValue(10000); //Ridiculously large
+
     irr_device->getCursorControl()->setVisible(false);
 }
 
@@ -191,16 +192,12 @@ void IrrlichtHandler::load_file_archive(std::string archive_loc)
     irr_device->getFileSystem()->addFileArchive(archive_loc.c_str());
 }
 
-MapMesh IrrlichtHandler::add_octree_mesh(std::string mesh_name)
+MapMesh IrrlichtHandler::add_map_mesh(std::string mesh_name)
 {
     MapMesh new_mesh;
     new_mesh.mesh = scene_mgr->getMesh(mesh_name.c_str());
-    //new_mesh.mesh = std::unique_ptr<irr::scene::IAnimatedMesh>(scene_mgr->getMesh(mesh_name.c_str()));
 
-    new_mesh.node = scene_mgr->addOctreeSceneNode(new_mesh.mesh->getMesh(0),
-        0, -1, 1024);
-    //new_mesh.node = std::unique_ptr<irr::scene::IMeshSceneNode>(scene_mgr->addOctreeSceneNode(new_mesh.mesh->getMesh(0),
-    //    0, -1, 1024));
+    new_mesh.node = scene_mgr->addMeshSceneNode(new_mesh.mesh->getMesh(0));
 
     return new_mesh;
 }

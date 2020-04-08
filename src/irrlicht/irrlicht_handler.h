@@ -78,7 +78,7 @@ public:
 
     /* Load an octree mesh. This is an optimized mesh handled by irrlicht which
     only loads visible geometry. */
-    MapMesh add_octree_mesh(std::string mesh_name);
+    MapMesh add_map_mesh(std::string mesh_name);
     void set_map_mesh_position(MapMesh* mesh, vec3f pos);
     void set_map_mesh_scale(MapMesh* mesh, vec3f scale);
     float get_map_mesh_height(MapMesh* mesh) const;

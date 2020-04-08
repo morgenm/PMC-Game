@@ -162,11 +162,9 @@ int main()
         player.update();
         player_gun.update(frame_delta_time);
 
-        //dynamics_world->stepSimulation(frame_delta_time);
         physics_engine.step_simulation(frame_delta_time);
         then = now;
         box.set_position(physics_engine.get_rigid_body_pos(box_rig_body));
-        std::cout << physics_engine.get_rigid_body_pos(box_rig_body).y << '\n';
 
         graphics_engine.set_animated_mesh_position(box_mesh, box.get_position());
         graphics_engine.set_animated_mesh_rotation(box_mesh, box.get_rotation());
@@ -180,18 +178,6 @@ int main()
     }
 
     irrlicht_handler.drop_device();
-
-    /*for(int i=dynamics_world->getNumCollisionObjects()-1; i>=0; i--)
-    {
-        btCollisionObject *obj = dynamics_world->getCollisionObjectArray()[i];
-        btRigidBody *rb = btRigidBody::upcast(obj);
-        if(rb && rb->getMotionState())
-        {
-            delete rb->getMotionState();
-        }
-        dynamics_world->removeCollisionObject(obj);
-        delete obj;
-    }*/
 
     return 0;
 }
