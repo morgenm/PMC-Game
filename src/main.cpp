@@ -2,46 +2,33 @@
 #include <cmath>
 #include <memory>
 
-#include "btBulletDynamicsCommon.h"
 #include "player.h"
 #include "player_gun.h"
 #include "irrlicht/irrlicht_handler.h"
 #include "graphics_engine.h"
 #include "vec3.h"
 #include "box.h"
+#include "physics_engine.h"
 
 #define PI std::acos(-1)
 
 int main()
 {
-
-
-    bool b_vsync = false;
-    bool b_fullscreen = false;
-    unsigned int i_width = 1280;
-    unsigned int i_height = 720;
+    bool b_vsync = true;
+    bool b_fullscreen = true;
+    unsigned int i_width = 1920;
+    unsigned int i_height = 1080;
 
     IrrlichtHandler irrlicht_handler(b_vsync, b_fullscreen,
         i_width, i_height);
     irrlicht_handler.create_device();
 
     GraphicsEngine graphics_engine(&irrlicht_handler);
-    /* PHYSICS SETUP*/
-    std::unique_ptr<btDefaultCollisionConfiguration> col_config(new btDefaultCollisionConfiguration());
-    std::unique_ptr<btCollisionDispatcher> dispatcher(new btCollisionDispatcher(col_config.get()));
-    std::unique_ptr<btBroadphaseInterface> overlapping_pair_cache(new btDbvtBroadphase());
-    std::unique_ptr<btSequentialImpulseConstraintSolver> solver(new btSequentialImpulseConstraintSolver);
-    std::unique_ptr<btDiscreteDynamicsWorld> dynamics_world(new btDiscreteDynamicsWorld(
-        dispatcher.get(), overlapping_pair_cache.get(), solver.get(), col_config.get()
-    ));
-
-    dynamics_world->setGravity(btVector3(0,-10,0));
-    std::cout << "Physics setup complete\n";
+    PhysicsEngine physics_engine;
 
     unsigned int sydney = graphics_engine.load_animated_mesh("../../irrlicht_engine/media/sydney.md2");
     graphics_engine.set_animated_mesh_texture(sydney, "../../irrlicht_engine/media/sydney.bmp");
     graphics_engine.set_animated_mesh_position(sydney, vec3f(1,0,1));
-    //graphics_engine.set_animated_mesh_scale(sydney, vec3f(0.01,0.01,0.01));
 
     float sydney_scalar = 1/graphics_engine.get_animated_mesh_height(sydney);
     graphics_engine.set_animated_mesh_scale(sydney, vec3f(sydney_scalar,sydney_scalar,sydney_scalar));
@@ -67,9 +54,7 @@ int main()
 
     //Quake3 Level
     graphics_engine.load_map_mesh_from_file("../../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
-    //graphics_engine.set_map_mesh_position(vec3f(-1300,-144,-1249));
     graphics_engine.set_map_mesh_position(vec3f(-20,-2,-20));
-    //graphics_engine.set_map_mesh_scale(vec3f(0.1,0.1,0.1));
     float map_scalar = 10/graphics_engine.get_map_mesh_height();
     graphics_engine.set_map_mesh_scale(vec3f(map_scalar,map_scalar,map_scalar));
     std::cout << "Map loaded\n";
@@ -79,7 +64,6 @@ int main()
     graphics_engine.set_animated_mesh_texture(box_mesh, "../resources/temp_box/temp_box.jpg");
     graphics_engine.set_animated_mesh_position(box_mesh, box.get_position());
     graphics_engine.set_animated_mesh_rotation(box_mesh, box.get_rotation());
-    //graphics_engine.set_animated_mesh_scale(box_mesh, vec3f(20,20,20));
 
     float box_scalar = 1/graphics_engine.get_animated_mesh_height(box_mesh);
     graphics_engine.set_animated_mesh_scale(box_mesh, vec3f(box_scalar,box_scalar,box_scalar));
@@ -90,36 +74,12 @@ int main()
     PlayerGun player_gun;
     bool player_walk = false;
 
-    btBoxShape *box_shape = new btBoxShape(btVector3(
-        1, 1, 1
-    ));
-    btTransform box_physics_pos;
-    box_physics_pos.setIdentity();
-    box_physics_pos.setOrigin(btVector3(
-        btScalar(box.get_position().x),
-        btScalar(box.get_position().y),
-        btScalar(box.get_position().z)
-    ));
-
-    btDefaultMotionState *m_state = new btDefaultMotionState(box_physics_pos);
-    btRigidBody::btRigidBodyConstructionInfo c_info(100, m_state, box_shape, btVector3(0,0,0));
-    btRigidBody *box_rig_body = new btRigidBody(c_info);
-
-    box_rig_body->setWorldTransform(box_physics_pos);
-    dynamics_world->addRigidBody(box_rig_body);
-
-    //Ground collision
-    btCollisionShape *ground_shape = new btBoxShape(btVector3(
-        btScalar(50.f), btScalar(1.f), btScalar(50.f)
-    ));
-    btTransform ground_transform;
-    ground_transform.setIdentity();
-    ground_transform.setOrigin(btVector3(0,-2.5,0));
-    btDefaultMotionState *ground_state = new btDefaultMotionState(ground_transform);
-    btRigidBody::btRigidBodyConstructionInfo g_c_info(0,ground_state, ground_shape, btVector3(0,0,0));
-    btRigidBody *ground_body = new btRigidBody(g_c_info);
-    dynamics_world->addRigidBody(ground_body);
-    /* END PHYSICS SETUP*/
+    unsigned int ground_rig_body = physics_engine.create_rigid_body(
+        PhysicsShape::BoxShape, vec3f(50,1,50), vec3f(0,-2.5,0), 0
+    );
+    unsigned int box_rig_body = physics_engine.create_rigid_body(
+        PhysicsShape::BoxShape, vec3f(1,1,1), box.get_position(), 100
+    );
 
     unsigned int then = irrlicht_handler.get_time();
 
@@ -202,17 +162,11 @@ int main()
         player.update();
         player_gun.update(frame_delta_time);
 
-        dynamics_world->stepSimulation(frame_delta_time);
+        //dynamics_world->stepSimulation(frame_delta_time);
+        physics_engine.step_simulation(frame_delta_time);
         then = now;
-
-        btTransform box_transform;
-        box_rig_body->getMotionState()->getWorldTransform(box_transform);
-        //std::cout << box_transform.getOrigin().getX() << '\n';
-        vec3f box_pos(box_transform.getOrigin().getX(),box_transform.getOrigin().getY(),box_transform.getOrigin().getZ());
-        box.set_position(box_pos);
-        //std::cout << "Physics done\n";
-
-        /*END PHYSICS UPDATE*/
+        box.set_position(physics_engine.get_rigid_body_pos(box_rig_body));
+        std::cout << physics_engine.get_rigid_body_pos(box_rig_body).y << '\n';
 
         graphics_engine.set_animated_mesh_position(box_mesh, box.get_position());
         graphics_engine.set_animated_mesh_rotation(box_mesh, box.get_rotation());
@@ -225,16 +179,9 @@ int main()
 
     }
 
-    dynamics_world->removeRigidBody(ground_body);
-    dynamics_world->removeRigidBody(box_rig_body);
-    delete ground_body;
-    delete ground_shape;
-    delete box_rig_body;
-    delete box_shape;
-
     irrlicht_handler.drop_device();
 
-    for(int i=dynamics_world->getNumCollisionObjects()-1; i>=0; i--)
+    /*for(int i=dynamics_world->getNumCollisionObjects()-1; i>=0; i--)
     {
         btCollisionObject *obj = dynamics_world->getCollisionObjectArray()[i];
         btRigidBody *rb = btRigidBody::upcast(obj);
@@ -244,7 +191,7 @@ int main()
         }
         dynamics_world->removeCollisionObject(obj);
         delete obj;
-    }
+    }*/
 
     return 0;
 }
