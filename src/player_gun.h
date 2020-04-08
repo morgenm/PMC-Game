@@ -3,7 +3,7 @@
 
 class PlayerGun
 {
-    const float aim_time_wait = 0.2;
+    const float aim_time_wait = 0.2f;
     float time_since_aim = 0.f; //Time since last aim change
     bool aimed = false;
 public:

@@ -42,12 +42,12 @@ int main()
 
     std::cout << "Gun loaded\n";
 
-    vec3f gun_mesh_default_pos(0.05,-0.05,0.05);
+    vec3f gun_mesh_default_pos(0.05f,-0.05f,0.05f);
     vec3f gun_mesh_default_rot(0,-120,0);
     vec3f gun_mesh_aimed_pos(0,-1,8);
     vec3f gun_mesh_aimed_rot(-60,-90,60);
 
-    float gun_scalar = (0.01)*graphics_engine.get_animated_mesh_height(gun_mesh);
+    float gun_scalar = (0.01f)*graphics_engine.get_animated_mesh_height(gun_mesh);
     graphics_engine.set_animated_mesh_scale(gun_mesh, vec3f(gun_scalar, gun_scalar, gun_scalar));
     graphics_engine.set_animated_mesh_position(gun_mesh, gun_mesh_default_pos);
     graphics_engine.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
@@ -99,8 +99,8 @@ int main()
         if(irrlicht_handler.is_key_down(irr::KEY_KEY_W))
         {
             const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
-            float dx = std::sin(rotY*PI/180.f);
-            float dz = std::cos(rotY*PI/180.f);
+            float dx = (float)std::sin(rotY*PI/180.f);
+            float dz = (float)std::cos(rotY*PI/180.f);
             if(!isnan(dx))
                 player_move_vec.x += dx;
             if(!isnan(dz))
@@ -110,8 +110,8 @@ int main()
         if(irrlicht_handler.is_key_down(irr::KEY_KEY_S))
         {
             const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
-            float dx = std::sin(rotY*PI/180.f);
-            float dz = std::cos(rotY*PI/180.f);
+            float dx = (float)std::sin(rotY*PI/180.f);
+            float dz = (float)std::cos(rotY*PI/180.f);
             if(!isnan(dx))
                 player_move_vec.x -= dx;
             if(!isnan(dz))
@@ -121,8 +121,8 @@ int main()
         if(irrlicht_handler.is_key_down(irr::KEY_KEY_D))
         {
             const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
-            float dx = std::sin((rotY+90)*PI/180.f);
-            float dz =  std::cos((rotY+90)*PI/180.f);
+            float dx = (float)std::sin((rotY+90)*PI/180.f);
+            float dz = (float)std::cos((rotY+90)*PI/180.f);
             if(!isnan(dx))
                 player_move_vec.x += dx;
             if(!isnan(dz))
@@ -132,8 +132,8 @@ int main()
         if(irrlicht_handler.is_key_down(irr::KEY_KEY_A))
         {
             const float rotY = irrlicht_handler.get_fps_camera_rotation_y();
-            float dx = std::sin((rotY+90)*PI/180.f);
-            float dz = std::cos((rotY+90)*PI/180.f);
+            float dx = (float)std::sin((rotY+90)*PI/180.f);
+            float dz = (float)std::cos((rotY+90)*PI/180.f);
             if(!isnan(dx))
                 player_move_vec.x -= dx;
             if(!isnan(dz))

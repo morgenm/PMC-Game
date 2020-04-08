@@ -1,5 +1,5 @@
 # Build
 mkdir build
 cd build
-cmake ..
+cmake .. -A x65
 cmake --build . --config Release

@@ -138,8 +138,8 @@ void IrrlichtHandler::add_fps_camera(vec3f pos)
 {
     fps_camera = scene_mgr->addCameraSceneNodeFPS();
     fps_camera->setPosition(vec3f_to_vector3df(pos));
-    fps_camera->setNearValue(0.01);
-    fps_camera->setFarValue(10000); //Ridiculously large
+    fps_camera->setNearValue(0.01f);
+    fps_camera->setFarValue(10000.0f); //Ridiculously large
 
     irr_device->getCursorControl()->setVisible(false);
 }

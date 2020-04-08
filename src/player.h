@@ -15,10 +15,10 @@ class Player
     vec3f position;
     vec3f velocity; //Units traveled per frame
 
-    const float max_velocity_magnitude = 3.5/60.f;
-    const float min_velocity_magnitude = 0.5/60.f;
+    const float max_velocity_magnitude = 3.5f/60.f;
+    const float min_velocity_magnitude = 0.5f/60.f;
     const float acceleration_scalar = 1/60.f;
-    const float decceleration_scalar = 0.2/60;
+    const float decceleration_scalar = 0.2f/60;
 
 public:
     Player(vec3f p);

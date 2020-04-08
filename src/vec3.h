@@ -14,18 +14,20 @@ graphics engine.
 
 struct vec3f
 {
+    //Actual values of the vector
     float x;
     float y;
     float z;
+
     vec3f(float inX, float inY, float inZ)
     :x(inX), y(inY), z(inZ)
     {
     }
 
-    float get_magnitude() const
+    float get_magnitude() const 
     {
-        float tot = pow(x,2) + pow(y,2) + pow(z,2);
-        return sqrt(tot);
+        float tot = (float)pow(x,2) + (float)pow(y,2) + (float)pow(z,2);
+        return (float)sqrt(tot);
     }
     vec3f get_normalized() const
     {
