@@ -38,14 +38,20 @@ find_library(
 	PATHS ${BIN_DIR}
 )
 
+find_library(
+	miniz
+	NAMES miniz Miniz
+	PATHS ${BIN_DIR}
+)
+
 configure_file(${BIN_DIR}/Irrlicht.dll ${CMAKE_SOURCE_DIR}/build COPYONLY)
 
-include_directories(${CMAKE_SOURCE_DIR}/../irrlicht_engine/include ${CMAKE_SOURCE_DIR}/../bullet3/src)
+include_directories(${CMAKE_SOURCE_DIR}/../irrlicht_engine/include ${CMAKE_SOURCE_DIR}/../bullet3/src ${CMAKE_SOURCE_DIR}/../miniz)
 
 add_executable(PMC ${pmc_src})
 
 set_target_properties(PMC PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(PMC ${Irrlicht} ${BulletDynamics} ${BulletCollision} ${BulletLinearMath})
+target_link_libraries(PMC ${miniz} ${Irrlicht} ${BulletDynamics} ${BulletCollision} ${BulletLinearMath})
 
 if(WIN32)
 	target_compile_options(PMC PRIVATE /MT)
