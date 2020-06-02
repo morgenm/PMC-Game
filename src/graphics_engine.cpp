@@ -51,6 +51,13 @@ void GraphicsEngine::set_animated_mesh_scale(unsigned int mesh_id, vec3f scale)
     irrlicht_handler->set_animated_mesh_scale(&animated_meshes[mesh_id], scale);
 }
 
+void GraphicsEngine::draw_line(const vec3f &start, const vec3f &end)
+{
+    //irrlicht_handler->draw_line(start, end);
+    Line l(start,end);
+    lines.push_back(l);
+}
+
 float GraphicsEngine::get_animated_mesh_height(unsigned int mesh_id)
 {
     return irrlicht_handler->get_animated_mesh_height(&animated_meshes[mesh_id]);
@@ -75,4 +82,12 @@ void GraphicsEngine::set_map_mesh_scale(vec3f scale)
 float GraphicsEngine::get_map_mesh_height()
 {
     return irrlicht_handler->get_map_mesh_height(&loaded_map);
+}
+
+void GraphicsEngine::draw()
+{
+    for(auto it=lines.begin(); it!=lines.end(); it++)
+    {
+        irrlicht_handler->draw_line(it->start, it->end);
+    }
 }

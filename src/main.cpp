@@ -108,7 +108,9 @@ struct Face
         int size[2];
 };
 
-class Det3x3 //Determinant of a 3x3 matrix
+//Determinant of a 3x3 matrix.
+//This is used for calculating the vertices of a BSP plane.
+class Det3x3
 {
     float vals[3][5]; //Extra columns are for cramers rule
 public:
@@ -176,6 +178,16 @@ public:
         solution += (down-up);
         return solution;
     }
+};
+
+struct PlaneVert
+{
+    vec3f vert;
+    int planes[3]; //Indices into a plane vec
+
+    PlaneVert(const vec3f &v)
+    :vert(v)
+    {}
 };
 
 bool load_physics_map(PhysicsEngine &physics_engine, std::string map_file_loc, std::string map_name, GraphicsEngine &graphics_engine) //Load physics world from map. REMOVE REFERENCES TO PHYSICS ENGINE AND GRAPHCIS ENGINE AND REPLACE WITH MESSAGING SYSTEM
@@ -293,7 +305,9 @@ bool load_physics_map(PhysicsEngine &physics_engine, std::string map_file_loc, s
         {
             Brush b = *(brushes+l.leaf_brush+j);
             BSPTexture t = *(textures+b.texture);
-            if(t.contents & 1 && b.num_brush_sides<=9) //This is messy because polygons with more than 10 faces aren't handled. Move to hex instead. Better yet don't use combo
+            //This is messy because polygons with more than 10 faces aren't handled.
+            //Move to hex instead. Better yet don't use combo
+            if(t.contents & 1 && b.num_brush_sides<=9)
             {
                 std::vector<Plane> planes_vec;
                 for(int s=0; s<b.num_brush_sides; s++)
@@ -335,7 +349,9 @@ bool load_physics_map(PhysicsEngine &physics_engine, std::string map_file_loc, s
                         }
                     }
                 }
-                std::vector<vec3f> vertices;
+
+                std::vector<PlaneVert> vertices;
+                //Calculate vertices from the BSP planes using plane equation
                 for(auto it=comb.begin(); it!=comb.end(); it++)
                 {
                     //Convert the combination into ints to access the planes_vec
@@ -393,11 +409,38 @@ bool load_physics_map(PhysicsEngine &physics_engine, std::string map_file_loc, s
                         if(dist1 !=0 && dist2 != 0 && dist3 != 0 && d != 0)
                         {
                             vec3f point(dx/d, dy/d, dz/d);
-                            vertices.push_back(point);
+                            PlaneVert v(point);
+                            v.planes[0] = p1i; v.planes[1] = p2i; v.planes[2] = p3i;
+                            vertices.push_back(v);
                         }
                     }
                 }
-
+                //Loop through the planes and find the vertices that belong
+                //to the plane.
+                for(int p=0; p<planes_vec.size(); p++)
+                {
+                    std::vector<size_t> p_verts;
+                    for(size_t vert=0; vert<vertices.size(); vert++)
+                    {
+                        int curr_p_vert_num = 0;
+                        for(int i=0; i<3; i++)
+                        {
+                            if(vertices[vert].planes[i] == p)
+                                curr_p_vert_num++;
+                        }
+                        if(curr_p_vert_num == 1)
+                        {
+                            p_verts.push_back(vert);
+                        }
+                    }
+                    if(p_verts.size()<2) //Can't draw a line with less than 2 vertices
+                        continue;
+                    //This just draws lines sequentially from vertex to vertex
+                    for(auto it=p_verts.begin(); it!=std::prev(p_verts.end()); it++)
+                    {
+                        graphics_engine.draw_line(vertices[*it].vert*0.015625, vertices[*std::next(it)].vert*0.015625);
+                    }
+                }
             }
         }
     }
@@ -459,11 +502,12 @@ int main()
     graphics_engine.set_animated_mesh_rotation(gun_mesh, gun_mesh_default_rot);
 
     //Quake3 Level
-    graphics_engine.load_map_mesh_from_file("../../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
+    /*graphics_engine.load_map_mesh_from_file("../../irrlicht_engine/media/map-20kdm2.pk3", "20kdm2.bsp");
     graphics_engine.set_map_mesh_position(vec3f(-20,-2,-20));
     float map_scalar = 10/graphics_engine.get_map_mesh_height();
+    std::cout << "MAP SCALAR: " << map_scalar << '\n'; //0.015625
     graphics_engine.set_map_mesh_scale(vec3f(map_scalar,map_scalar,map_scalar));
-    std::cout << "Map loaded\n";
+    std::cout << "Map loaded\n";*/
 
     //Box object
     Box box(vec3f(1,0,2), vec3f(0,0,0));
@@ -582,6 +626,7 @@ int main()
         irrlicht_handler.begin_drawing();
         irrlicht_handler.draw_scene();
         irrlicht_handler.draw_gui();
+        graphics_engine.draw();
         irrlicht_handler.end_drawing();
 
     }

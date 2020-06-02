@@ -1,5 +1,8 @@
 #include "irrlicht_handler.h"
 #include <string>
+#include <memory>
+
+#include <iostream>
 
 IrrlichtHandler::IrrlichtHandler(bool vsync, bool fullscreen,
 unsigned int width, unsigned int height)
@@ -132,6 +135,11 @@ float IrrlichtHandler::get_animated_mesh_height(IrrlichtMesh *mesh) const
             min_Y = edges[i].Y;
     }
     return max_Y-min_Y;
+}
+
+void IrrlichtHandler::draw_line(const vec3f &start, const vec3f &end)
+{
+    driver->draw3DLine(vec3f_to_vector3df(start), vec3f_to_vector3df(end));
 }
 
 void IrrlichtHandler::add_fps_camera(vec3f pos)

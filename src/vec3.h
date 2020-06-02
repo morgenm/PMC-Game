@@ -12,6 +12,8 @@ graphics engine.
 
 #include <math.h>
 
+#include <iostream> //To be replaced by error handling
+
 struct vec3f
 {
     //Actual values of the vector
@@ -24,7 +26,12 @@ struct vec3f
     {
     }
 
-    float get_magnitude() const 
+    vec3f(const vec3f& v)
+    :x(v.x), y(v.y), z(v.z)
+    {
+    }
+
+    float get_magnitude() const
     {
         float tot = (float)pow(x,2) + (float)pow(y,2) + (float)pow(z,2);
         return (float)sqrt(tot);
@@ -42,14 +49,69 @@ struct vec3f
         nz /= mag;
         return vec3f(nx, ny, nz);
     }
-    bool operator==(vec3f v) const
+    bool operator==(const vec3f &v) const
     {
         return x==v.x && y==v.y && z==v.z;
     }
-    bool operator!=(vec3f v) const
+    bool operator!=(const vec3f &v) const
     {
         return x!=v.x || y==v.y || z==v.z;
     }
+
+    //Scalar operations
+    vec3f operator*(const float mult) const
+    {
+        vec3f new_vec(*this);
+        new_vec.x *= mult; new_vec.y *= mult; new_vec.z *= mult;
+        return new_vec;
+    }
+    vec3f operator+(const float a) const
+    {
+        vec3f new_vec(*this);
+        new_vec.x += a; new_vec.y += a; new_vec.z += a;
+        return new_vec;
+    }
+    vec3f operator-(const float sub) const
+    {
+        vec3f new_vec(*this);
+        new_vec.x -= sub; new_vec.y -= sub; new_vec.z -= sub;
+        return new_vec;
+    }
+
+    //Vector algebraic operations
+    vec3f operator+(const vec3f& v)
+    {
+        vec3f new_vec(*this);
+        new_vec.x += v.x; new_vec.y += v.y; new_vec.z += v.z;
+        return new_vec;
+    }
+    vec3f operator-(const vec3f& v)
+    {
+        vec3f new_vec(*this);
+        new_vec.x -= v.x; new_vec.y -= v.y; new_vec.z -= v.z;
+        return new_vec;
+    }
+
+    float operator[](const size_t i) const
+    {
+        switch(i)
+        {
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
+            default:
+                std::cout << "ERROR: VEC3F ACCESSOR OUT OF BOUNDS!\n";
+                return -1;
+        }
+    }
+};
+
+struct vec3ui
+{
+    unsigned int x,y,z;
 };
 
 #endif

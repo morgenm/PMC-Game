@@ -49,6 +49,7 @@ public:
     void draw_scene();
     void draw_gui();
 
+    //Animated Meshes
     IrrlichtMesh add_animated_mesh(std::string mesh_loc);
     void set_animated_mesh_texture(IrrlichtMesh *mesh, std::string texture_loc);
     void set_animated_mesh_parent_to_fps_camera(IrrlichtMesh *mesh);
@@ -61,6 +62,9 @@ public:
     vec3f get_animated_mesh_position(IrrlichtMesh *mesh) const;
     vec3f get_animated_mesh_rotation(IrrlichtMesh *mesh) const;
     float get_animated_mesh_height(IrrlichtMesh *mesh) const;
+
+    //Draw line
+    void draw_line(const vec3f &start, const vec3f &end);
 
     void add_fps_camera(vec3f pos);
     void move_fps_camera(float dx, float dy, float dz);
