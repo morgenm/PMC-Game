@@ -1,0 +1,3 @@
+-I../Libraries/bullet3/src
+-I../Libraries/irrlicht_engine/include
+-I../Libraries/miniz/
