@@ -23,10 +23,7 @@ void MessageSystem::CreateFeed(const MessageFeedID *out_MsgFeedID) {
 
     MessageFeed newFeed;//Create the Message Feed
     auto emplaceResult = m_MsgFeeds.emplace(msgFeedID, newFeed); //Add the Message Feed to the feed container
-
-    //auto findResult = m_MsgFeeds.find(msgFeedID);
-    //const MessageFeedID msgFeedIDPtr = (findResult->first);
-
+    //Replace this with Resource Engine's pointers
     const MessageFeedID *msgFeedIDPtr = &((emplaceResult.first)->first);
     out_MsgFeedID = msgFeedIDPtr;
 }
