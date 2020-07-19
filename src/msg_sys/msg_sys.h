@@ -25,7 +25,7 @@ public:
     //MessageSystem();
     void RegisterEngineFeedRequest(EngineFeedRegisterRequest in_FeedRegReq);
 private:
-    void CreateFeed(const MessageFeedID *out_MsgFeedID);
+    MessageFeedID CreateFeed();
 
     std::map<MessageFeedID, MessageFeed> m_MsgFeeds;
 };

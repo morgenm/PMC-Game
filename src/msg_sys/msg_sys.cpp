@@ -5,16 +5,15 @@ void MessageSystem::RegisterEngineFeedRequest(EngineFeedRegisterRequest in_FeedR
         EngineMessageFeed *engFeed = in_FeedRegReq.GetFeed();
 
         //Create the new Message Feed
-        const MessageFeedID *newFeedID;
-        CreateFeed(newFeedID);
+        MessageFeedID newFeedID = CreateFeed();
 
         //Register the feed
-        MessageFeed *msgFeed = &m_MsgFeeds.at(*newFeedID);
+        MessageFeed *msgFeed = &m_MsgFeeds.at(newFeedID);
         engFeed->ms_RegisterUnderlyingFeed(msgFeed);
     }
 }
 
-void MessageSystem::CreateFeed(const MessageFeedID *out_MsgFeedID) {
+MessageFeedID MessageSystem::CreateFeed() {
     MessageFeedID msgFeedID;
     while(m_MsgFeeds.count(msgFeedID) > 0)
     {
@@ -22,8 +21,7 @@ void MessageSystem::CreateFeed(const MessageFeedID *out_MsgFeedID) {
     }
 
     MessageFeed newFeed;//Create the Message Feed
-    auto emplaceResult = m_MsgFeeds.emplace(msgFeedID, newFeed); //Add the Message Feed to the feed container
-    //Replace this with Resource Engine's pointers
-    const MessageFeedID *msgFeedIDPtr = &((emplaceResult.first)->first);
-    out_MsgFeedID = msgFeedIDPtr;
+    m_MsgFeeds.emplace(msgFeedID, newFeed); //Add the Message Feed to the feed container
+
+    return msgFeedID;
 }
