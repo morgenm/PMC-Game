@@ -7,6 +7,6 @@ Main stores the PMC object.
 
 int main() {
     PMC pmc;
-    pmc.run();
+    pmc.Run();
     return 0;
 }

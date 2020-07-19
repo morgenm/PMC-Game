@@ -1,0 +1,10 @@
+(A) Add Resource Engine's Pointer handler and
+    replace pointers with Resource Pointers.
+(A) Add Message System as friend class to EngineMessageFeed to fix
+    the abstraction-breaking ms_RegisterUnderlyingFeed.
+(A) Replace all parameter names to include in_ and out_ specifiers.
+(B) Create a map container template which handles creating new IDs.
+(B) Create a generic Singleton base class or a template Singleton.
+(B) Create an engine base class.
+(A) Start writing tests for all class interfaces and functions
+(C) Consider separating class interfaces from their private implementations.
