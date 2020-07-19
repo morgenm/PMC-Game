@@ -1,7 +1,7 @@
 #include "feed_register_req.h"
 
-void EngineFeedRegisterRequest::AddFeed(EngineMessageFeed *engineFeed) {
-    m_Feeds.push_back(engineFeed);
+void EngineFeedRegisterRequest::AddFeed(EngineMessageFeed *in_EngineFeed) {
+    m_Feeds.push_back(in_EngineFeed);
 }
 
 EngineMessageFeed* EngineFeedRegisterRequest::GetFeed() {

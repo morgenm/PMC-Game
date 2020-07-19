@@ -1,8 +1,8 @@
 #include "msg_sys.h"
 
-void MessageSystem::RegisterEngineFeedRequest(EngineFeedRegisterRequest feedRegReq) {
-    while(feedRegReq.IsMoreFeeds()) {
-        EngineMessageFeed *engFeed = feedRegReq.GetFeed();
+void MessageSystem::RegisterEngineFeedRequest(EngineFeedRegisterRequest in_FeedRegReq) {
+    while(in_FeedRegReq.IsMoreFeeds()) {
+        EngineMessageFeed *engFeed = in_FeedRegReq.GetFeed();
 
         //Create the new Message Feed
         const MessageFeedID *newFeedID;
