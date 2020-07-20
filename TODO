@@ -7,3 +7,4 @@
 (B) Create an engine base class.
 (A) Start writing tests for all class interfaces and functions
 (C) Consider separating class interfaces from their private implementations.
+(A) Create Error Handling engine to standardize errors.

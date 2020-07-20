@@ -1,6 +1,14 @@
 #include "feed_register_req.h"
 
+#include <iostream>
+#include "assert.h"
+
 void EngineFeedRegisterRequest::AddFeed(EngineMessageFeed *in_EngineFeed) {
+    if(in_EngineFeed == NULL) {
+        //Replace with better error handling
+        assert(false, "EngineFeedRegisterRequest::AddFeed Assert Failed: Null Pointer", return)
+        return;
+    }
     m_Feeds.push_back(in_EngineFeed);
 }
 
