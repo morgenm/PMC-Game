@@ -9,3 +9,7 @@
     } \
 }
 #endif
+
+#ifdef NDEBUG
+#define assert(condition, message, action)
+#endif

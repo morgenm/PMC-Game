@@ -1,3 +1,11 @@
+/*
+TODO
+Priority:
+A - Maximum Priority
+B - Medium Priority
+C - Low Priority
+*/
+
 (A) Add Resource Engine's Pointer handler and
     replace pointers with Resource Pointers.
 (A) Add Message System as friend class to EngineMessageFeed to fix
@@ -8,3 +16,4 @@
 (A) Start writing tests for all class interfaces and functions
 (C) Consider separating class interfaces from their private implementations.
 (A) Create Error Handling engine to standardize errors.
+(C) Format all parentheses in if statements and the like.

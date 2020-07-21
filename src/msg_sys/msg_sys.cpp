@@ -1,5 +1,7 @@
 #include "msg_sys.h"
 
+#include "error.h"
+
 void MessageSystem::RegisterEngineFeedRequest(EngineFeedRegisterRequest in_FeedRegReq) {
     while(in_FeedRegReq.IsMoreFeeds()) {
         EngineMessageFeed *engFeed = in_FeedRegReq.GetFeed();
@@ -8,8 +10,9 @@ void MessageSystem::RegisterEngineFeedRequest(EngineFeedRegisterRequest in_FeedR
         MessageFeedID newFeedID = CreateFeed();
 
         //Register the feed
+        E_Error error;
         MessageFeed *msgFeed = &m_MsgFeeds.at(newFeedID);
-        engFeed->ms_RegisterUnderlyingFeed(msgFeed);
+        engFeed->ms_RegisterUnderlyingFeed(msgFeed, &error);
     }
 }
 
