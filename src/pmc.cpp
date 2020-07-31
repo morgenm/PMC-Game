@@ -1,5 +1,7 @@
 #include "pmc.h"
 
+#include "error.h"
+
 PMC::PMC() {
     //Construct subengines
     //Construct/Initialize Messaging System
@@ -8,7 +10,8 @@ PMC::PMC() {
     EngineFeedRegisterRequest gameFeedRegReq = m_Game.GetFeedRegisterRequest();
 
     //Register subengine feeds with msg sys
-    m_MsgSys.RegisterEngineFeedRequest(gameFeedRegReq);
+    E_Error error;
+    m_MsgSys.RegisterEngineFeedRequest(gameFeedRegReq, &error);
 
     m_IsPMCRunning = true; //PMC is now running
 }

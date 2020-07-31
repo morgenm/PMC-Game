@@ -10,6 +10,7 @@ It contains and handles message feeds.
 #include "engine_msg_feed.h"
 #include "feed_register_req.h"
 #include "msg_feed_id.h"
+#include "error.h"
 
 #include <map>
 
@@ -23,7 +24,7 @@ public:
         //Register all message feeds described in the request.
         //Abstraction Level: FeedRegisterRequest
     //MessageSystem();
-    void RegisterEngineFeedRequest(EngineFeedRegisterRequest in_FeedRegReq);
+    void RegisterEngineFeedRequest(EngineFeedRegisterRequest in_FeedRegReq, E_Error *out_Error);
 private:
     MessageFeedID CreateFeed();
 
