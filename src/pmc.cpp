@@ -12,14 +12,14 @@ PMC::PMC() {
 
     //Register subengine feeds with msg sys
     E_Error error;
-    m_MsgSys.RegisterEngineFeedRequest(gameFeedRegReq, &error);
+    m_MsgSys.RegisterEngineFeedRequest( gameFeedRegReq, &error );
     assert( error != E_Error::E_ErrorError, "PMC::PMC() RegisterEngineFeedRequest Error!\n", {} );
 
     m_IsPMCRunning = true; //PMC is now running
 }
 
 void PMC::Run() {
-    while(m_IsPMCRunning == true) {
+    while( m_IsPMCRunning == true ) {
         //Update all subengines
         //Send all Message System messages
     }

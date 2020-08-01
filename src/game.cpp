@@ -2,6 +2,6 @@
 
 EngineFeedRegisterRequest Game::GetFeedRegisterRequest() {
     EngineFeedRegisterRequest registerRequest;
-    registerRequest.AddFeed(&m_GameMsgFeed);
+    registerRequest.AddFeed( &m_GameMsgFeed );
     return registerRequest;
 }

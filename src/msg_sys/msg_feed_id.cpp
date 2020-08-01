@@ -4,8 +4,8 @@ void MessageFeedID::NewID() {
     m_ID++;
 }
 
-bool MessageFeedID::operator==(const MessageFeedID& in_CompareID) const {
-    if(m_ID == in_CompareID.m_ID) {
+bool MessageFeedID::operator==( const MessageFeedID& in_CompareID ) const {
+    if( m_ID == in_CompareID.m_ID ) {
         return true;
     }
     else {
@@ -13,8 +13,8 @@ bool MessageFeedID::operator==(const MessageFeedID& in_CompareID) const {
     }
 }
 
-bool MessageFeedID::operator<(const MessageFeedID &in_CompareID) const {
-    if(m_ID < in_CompareID.m_ID) {
+bool MessageFeedID::operator<( const MessageFeedID &in_CompareID ) const {
+    if( m_ID < in_CompareID.m_ID ) {
         return true;
     }
     else {
@@ -22,8 +22,8 @@ bool MessageFeedID::operator<(const MessageFeedID &in_CompareID) const {
     }
 }
 
-bool MessageFeedID::operator>(const MessageFeedID &in_CompareID) const {
-    if(m_ID > in_CompareID.m_ID) {
+bool MessageFeedID::operator>( const MessageFeedID &in_CompareID ) const {
+    if( m_ID > in_CompareID.m_ID ) {
         return true;
     }
     else {

@@ -23,7 +23,7 @@ public:
         //Returns true if there are any more requests
         //Abstraction level is at request.
 
-    void AddFeed(EngineMessageFeed *in_EngineFeed);
+    void AddFeed( EngineMessageFeed *in_EngineFeed );
     EngineMessageFeed *GetFeed();
     bool IsMoreFeeds() const;
 

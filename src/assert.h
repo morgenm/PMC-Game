@@ -17,8 +17,8 @@ static int testing = 0;
 
 #ifndef NDEBUG
 #include <iostream>
-#define assert(condition, message, action) { \
-    if(!(condition)) { \
+#define assert( condition, message, action ) { \
+    if( !( condition ) ) { \
         std::cout << "Assert failed: " << message << '\n'; \
         action; \
         exit_with_error(); \
@@ -27,5 +27,5 @@ static int testing = 0;
 #endif
 
 #ifdef NDEBUG
-#define assert(condition, message, action)
+#define assert( condition, message, action )
 #endif

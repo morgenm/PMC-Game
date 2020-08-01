@@ -24,7 +24,7 @@ public:
         //Register all message feeds described in the request.
         //Abstraction Level: FeedRegisterRequest
     //MessageSystem();
-    void RegisterEngineFeedRequest(EngineFeedRegisterRequest in_FeedRegReq, E_Error *out_Error);
+    void RegisterEngineFeedRequest( EngineFeedRegisterRequest in_FeedRegReq, E_Error *out_Error );
 private:
     MessageFeedID CreateFeed();
 

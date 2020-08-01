@@ -9,9 +9,9 @@ the Messaging System.
 class MessageFeedID {
 public:
     void NewID(); //Generate a new ID value
-    bool operator==(const MessageFeedID &in_CompareID) const;
-    bool operator<(const MessageFeedID &in_CompareID) const;
-    bool operator>(const MessageFeedID &in_CompareID) const;
+    bool operator==( const MessageFeedID &in_CompareID ) const;
+    bool operator<( const MessageFeedID &in_CompareID ) const;
+    bool operator>( const MessageFeedID &in_CompareID ) const;
 private:
     unsigned int m_ID = 0;
 };
