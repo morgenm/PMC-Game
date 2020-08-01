@@ -9,6 +9,8 @@ add_executable(T_MSG_SYS "test.cpp" "${MSG_SYS_DIR}/feed_register_req.cpp" "${MS
 
 target_include_directories(T_MSG_SYS PRIVATE "../../src" "../../src/*")
 
+add_definitions( -DTESTING )
+
 if(WIN32)
     target_compile_options(T_MSG_SYS PRIVATE /MT)
     target_link_options(T_MSG_SYS PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)

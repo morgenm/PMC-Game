@@ -9,6 +9,8 @@ add_executable(T_ENGINE_MSG_FEED "test.cpp" "${MSG_SYS_DIR}/engine_msg_feed.cpp"
 
 target_include_directories(T_ENGINE_MSG_FEED PRIVATE "../../src" "../../src/*")
 
+add_definitions( -DTESTING )
+
 if(WIN32)
     target_compile_options(T_ENGINE_MSG_FEED PRIVATE /MT)
     target_link_options(T_ENGINE_MSG_FEED PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)

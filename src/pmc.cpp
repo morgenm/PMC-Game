@@ -1,6 +1,7 @@
 #include "pmc.h"
 
 #include "error.h"
+#include "assert.h"
 
 PMC::PMC() {
     //Construct subengines
@@ -12,6 +13,7 @@ PMC::PMC() {
     //Register subengine feeds with msg sys
     E_Error error;
     m_MsgSys.RegisterEngineFeedRequest(gameFeedRegReq, &error);
+    assert( error != E_Error::E_ErrorError, "PMC::PMC() RegisterEngineFeedRequest Error!\n", {} );
 
     m_IsPMCRunning = true; //PMC is now running
 }
