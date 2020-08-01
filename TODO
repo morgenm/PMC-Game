@@ -10,8 +10,11 @@ C - Low Priority
     replace pointers with Resource Pointers.
 (A) Add Message System as friend class to EngineMessageFeed to fix
     the abstraction-breaking ms_RegisterUnderlyingFeed.
+(A) Merge with Master.
 (A) Improve the quality of all tests.
+(A) Write a framework for all tests to use.
 (A) Create Error Handling engine to standardize errors.
+(A) Create Message class to represent MsgSys messages.
 (B) Create a map container template which handles creating new IDs.
 (B) Create a generic Singleton base class or a template Singleton.
 (B) Create an engine base class.
