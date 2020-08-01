@@ -13,6 +13,11 @@ void EngineFeedRegisterRequest::AddFeed(EngineMessageFeed *in_EngineFeed) {
 }
 
 EngineMessageFeed* EngineFeedRegisterRequest::GetFeed() {
+    //Calling back and pop_back on an empty vector causes undefined behaviors
+    if (m_Feeds.empty() ) {
+        return NULL;
+    }
+
     EngineMessageFeed* feed = m_Feeds.back();
 
     //Delete from vector because Requests are only handled once
