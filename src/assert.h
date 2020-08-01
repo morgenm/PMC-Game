@@ -1,3 +1,11 @@
+/*
+Assert
+Assert is a function used to ensure conditions which should never
+happen are detected. This is to be used to ensure foreseen errors and
+unwanted occurances are avoided. The assert function has no effect when
+building Release code.
+*/
+
 #pragma once
 
 static int testing = 0;

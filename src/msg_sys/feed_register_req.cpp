@@ -4,11 +4,7 @@
 #include "assert.h"
 
 void EngineFeedRegisterRequest::AddFeed( EngineMessageFeed *in_EngineFeed ) {
-    if( in_EngineFeed == nullptr ) {
-        //Replace with better error handling
-        assert( false, "EngineFeedRegisterRequest::AddFeed Assert Failed: Null Pointer", return );
-        return;
-    }
+    assert(in_EngineFeed != nullptr, "EngineFeedRegisterRequest::AddFeed Null Pointer", return);
     m_Feeds.push_back( in_EngineFeed );
 }
 

@@ -1,3 +1,8 @@
+/*
+Error
+This describes the types of errors that can occur in PMC.
+*/
+
 #pragma once
 
 enum E_Error {

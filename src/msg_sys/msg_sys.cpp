@@ -12,14 +12,15 @@ E_Error *out_Error ) {
 
         //Register the feed
         E_Error error;
-        MessageFeed *msgFeed = &m_MsgFeeds.at( newFeedID );
-        engFeed->ms_RegisterUnderlyingFeed( msgFeed, &error );
+        MessageFeed *msgFeedPtr = &m_MsgFeeds.at( newFeedID );
+        engFeed->ms_RegisterUnderlyingFeed( msgFeedPtr, &error );
 
         if( error == E_Error::E_ErrorError ) {
             *out_Error = error;
             return;
         }
     }
+    //No errors have occurred.
     *out_Error = E_Error::E_ErrorNoError;
 }
 
