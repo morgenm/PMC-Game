@@ -16,6 +16,5 @@ C - Low Priority
 (B) Create a map container template which handles creating new IDs.
 (B) Format comments for easier reading.
 (B) Format * and & operators.
-(B) Create a generic Singleton base class or a template Singleton.
 (B) Create an engine base class.
 (C) Consider separating class interfaces from their private implementations.
