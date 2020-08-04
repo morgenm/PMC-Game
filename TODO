@@ -8,8 +8,6 @@ C - Low Priority
 
 (A) Add Resource Engine's Pointer handler and
     replace pointers with Resource Pointers.
-(A) Add Message System as friend class to EngineMessageFeed to fix
-    the abstraction-breaking ms_RegisterUnderlyingFeed.
 (A) Merge with Master.
 (A) Improve the quality of all tests.
 (A) Write a framework for all tests to use.
