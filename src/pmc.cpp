@@ -3,9 +3,9 @@
 #include "error.h"
 #include "assert.h"
 
-PMC::PMC() {
-    //Construct subengines
-    //Construct/Initialize Messaging System
+PMC::PMC()
+: m_Game(m_EngineHandler.CreateGameEngine()),
+  m_MsgSys(m_EngineHandler.CreateMsgSys()) {
 
     //Create subengine message feeds
     EngineFeedRegisterRequest gameFeedRegReq = m_Game.GetFeedRegisterRequest();

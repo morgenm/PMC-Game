@@ -2,7 +2,7 @@
     Singleton Test
 */
 
-#include "engine/singleton.h"
+#include "singleton.h"
 
 #include <iostream>
 
