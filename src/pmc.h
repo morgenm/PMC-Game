@@ -7,7 +7,7 @@ controls the main game loop. It controls the Messaging System.
 #pragma once
 
 #include "engine/engine_handler.h"
-#include "engine/game.h"
+#include "game.h"
 #include "msg_sys/msg_sys.h"
 
 class PMC {
