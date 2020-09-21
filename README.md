@@ -1,5 +1,6 @@
 # PMC Game Engine
 A 3D game engine written in C++ utilizing Irrlicht and BulletPhysics.
+View the [Wiki](https://github.com/morgenm/PMC-Game/wiki) to see the Engine and to view the Architecture document.
 
 # Building the Engine
 ## Building on 64-bit machines
